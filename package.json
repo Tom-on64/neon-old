@@ -1,0 +1,22 @@
+{
+  "name": "neonlang",
+  "version": "0.0.1",
+  "description": "The Neon Programming Language",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"You thought!\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tom-on64/neon.git"
+  },
+  "keywords": [
+    "language"
+  ],
+  "author": "Tom-on",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tom-on64/neon/issues"
+  },
+  "homepage": "https://github.com/Tom-on64/neon#readme"
+}
