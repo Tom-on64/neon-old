@@ -1,0 +1,25 @@
+{
+  "name": "neon",
+  "displayName": "Neon",
+  "description": "This is a syntax highlighter for The Neon Programming Language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.81.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "neon",
+      "aliases": ["Neon", "neon"],
+      "extensions": [".ne"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "neon",
+      "scopeName": "source.ne",
+      "path": "./syntaxes/neon.tmLanguage.json"
+    }]
+  }
+}
