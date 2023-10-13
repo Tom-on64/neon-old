@@ -1,0 +1,26 @@
+{
+  "name": "neon",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs", 
+    "bin": "build", 
+    "lin": "lib"
+  },
+  "scripts": {
+    "test": "deno run --allow-read ./src/main.ts ./neon/test.ne", 
+    "build": "deno compile --output ./build/neon ./src/main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tom-on64/neon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tom-on64/neon/issues"
+  },
+  "homepage": "https://github.com/Tom-on64/neon#readme"
+}

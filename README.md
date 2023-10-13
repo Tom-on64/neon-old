@@ -6,7 +6,7 @@ Neon is a Fast, All-purpose, Multiparadigm, Compiled programming language.
 Neon works by compiling into Neon Executables (.nex), which can be ran by the Neon runner on any machine.
 
 ## TODO
-- [ ] Define syntax (maybe ebnf?)
+- [x] Define syntax (maybe ebnf?)
 - [ ] Write base compiler in TypeScript V0.1.0
   - [ ] Tokenize
     - [ ] Define tokens
@@ -32,3 +32,4 @@ Neon works by compiling into Neon Executables (.nex), which can be ran by the Ne
 - [ ] Optimization V0.8.0
 - [ ] Optimization V0.9.0
 - [ ] 1.0.0 Done!
+
