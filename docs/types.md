@@ -4,6 +4,7 @@
 
 | Type   | Description                                      | Range                                                   | Type Definition |
 | ------ | ------------------------------------------------ | ------------------------------------------------------- | --------------- |
+| void   | Void is not a type, but the absence of a type    |                                                         |                 |
 | byte   | 8-bit unsigned integer                           | 0 to 255                                                | Base.Byte       |
 | sbyte  | 8-bit signed integer                             | -128 to 127                                             | Base.SByte      |
 | short  | 16-bit signed integer                            | -32,768 to 32,767                                       | Base.Int16      |

@@ -1,6 +1,6 @@
 {
   "name": "neon",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "---",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
     "lin": "lib"
   },
   "scripts": {
-    "test": "deno run --allow-read ./src/main.ts ./neon/test.ne", 
+    "test": "deno run --allow-read ./src/main.ts", 
     "build": "deno compile --output ./build/neon ./src/main.ts"
   },
   "repository": {

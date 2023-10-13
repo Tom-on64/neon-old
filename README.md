@@ -10,7 +10,7 @@ Neon works by compiling into Neon Executables (.nex), which can be ran by the Ne
 - [ ] Write base compiler in TypeScript V0.1.0
   - [ ] Tokenize
     - [ ] Define tokens
-    - [ ] Peek(), Consume()
+    - [x] Peek(), Consume()
     - [ ] Ignore Comments
     - [ ] Tokenize more complex project
   - [ ] Parse -> AST
@@ -21,6 +21,7 @@ Neon works by compiling into Neon Executables (.nex), which can be ran by the Ne
     - [ ] Parse more complex project
   - [ ] Traverse AST + Linker -> .nex
   - [ ] Runner
+  - [x] Error handling
 - [ ] Write full compiler in Neon V0.2.0
   - [ ] Translate/rewrite TS code
   - [ ] Compile using TS version
