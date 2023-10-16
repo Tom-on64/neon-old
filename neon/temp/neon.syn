@@ -1,0 +1,39 @@
+(* Neon syntax *)
+(* Written in Syntax form : 16. 10. 2023 by Tomon *)
+(* Syntax form is madeup, but if you know EBNF, it's very simular *)
+(* Ignores optional whitespace, targets minified code *)
+
+program = codeblock EOF;
+codeblock = (definition|statement|expression)*;
+
+definition = (funcDefinition); (* Usually no return value *)
+    funcDefinition = type WS identifier "(" _argList ")" "{" codeblock "}";
+    _argList = (expression ",")*;
+
+statement = (import); (* No return value *)
+    import = "import" WS _pkg ("," _pkg)* EOL;
+    _pkg = identifier ("." identifier)*;
+
+expression = (literal); (* Has a return value *)
+    literal = ;
+
+identifier = [A-Za-z_][A-Za-z0-9_]*;
+
+type = ("void"|"int"|"float"|"string"|"char");
+
+
+
+(* Root Definitions *)
+EOL = ";";
+EOF = ?eof?;
+DIG = ?digit?;
+CHR = ?character?;
+WS = ?whitespace?;
+
+(* Example Neon code 
+import Base.IO;
+
+void main() {
+    log("Hello, World!");
+}
+*)

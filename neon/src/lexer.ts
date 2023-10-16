@@ -26,12 +26,12 @@ export class Lexer {
             while (this.current() != quote) string += this.consume();
             this.consume();
 
-            return new Token("LString", string);
+            return new Token(Literal.STRING, string);
         } else {
             const char = this.consume();
             if (this.current() != quote) error(1);
             this.consume(); // Consume the other quote
-            return new Token("LChar", char);
+            return new Token(Literal.CHAR, char);
         }
     }
 
@@ -41,10 +41,10 @@ export class Lexer {
         while (this.current().match(/[0-9]/)) numString += this.consume();
 
         if (this.current() != "." && this.current() != "f") 
-            return new Token("LInt", parseInt(numString));
+            return new Token(Literal.INT, parseInt(numString));
         else if (this.current() == "f") {
             this.consume();
-            return new Token("LFloat", parseFloat(numString));
+            return new Token(Literal.FLOAT, parseFloat(numString));
         } 
 
         numString += this.consume(); // Consume period
@@ -52,12 +52,15 @@ export class Lexer {
         if (this.current() != "f") error(2);
         this.consume() // Consume 'f'
         
-        return new Token("LFloat", parseFloat(numString));
+        return new Token(Literal.FLOAT, parseFloat(numString));
     }
 
-    tokenize(file: string) {
+    tokenize(file: string): Token[] {
         // Prepare file
-        this.input = file.replaceAll(/(\s\s+|\n)/g, "").split("");
+        this.input = file
+        .replaceAll(/(\/\*[\s\S]*?\*\/|\/\/[^\r\n]*$)/gm, "") // Remove all Comments
+        .replaceAll(/(\s\s+|\n)/g, "") // Remove whitespace
+        .split(""); // Split into single characters
         const tokens = Array<Token>();
 
         // Generate the tokens
@@ -68,34 +71,51 @@ export class Lexer {
                 while (this.current().match(/[A-Za-z0-9_]/)) identifier += this.consume();
 
                 // Check if it's a keyword or a type, else it's an id
-                if (keywords.includes(identifier)) tokens.push(new Token("keyword", identifier));
-                else if (types.includes(identifier)) tokens.push(new Token("type", identifier));
-                else tokens.push(new Token("identifier", identifier));
+                if (keywords.includes(identifier)) tokens.push(new Token(TokenType.KEYWORD, identifier));
+                else if (types.includes(identifier)) tokens.push(new Token(TokenType.TYPE, identifier));
+                else tokens.push(new Token(TokenType.IDENTIFIER, identifier));
             } else if (this.current().match(/[0-9'"]/)) {
                 // Check for literals
                 if (this.current().match(/('|")/)) tokens.push(this.parseString()); // String
                 else tokens.push(this.parseNumber()); // Number
             } else if (operators.includes(this.current())) // Check for operators
-                tokens.push(new Token("operator", this.consume()));
+                tokens.push(new Token(TokenType.OPERATOR, this.consume()));
             else if (special.includes(this.current())) // Check for special symbols
-                tokens.push(new Token("special", this.consume()));
-            else if (this.current() == ";") { this.consume(); tokens.push(new Token("EOL")) }
+                tokens.push(new Token(TokenType.SPECIAL, this.consume()));
+            else if (this.current() == ";") { this.consume(); tokens.push(new Token(TokenType.EOL)) }
             else this.consume();
         }
-        tokens.push(new Token("EOF"));
+        tokens.push(new Token(TokenType.EOF));
 
 
-        console.log(tokens);
+        return tokens;
     }
 }
 
-class Token {
-    type: string;
+export class Token {
+    type: TokenType | Literal;
     value: string | number | undefined;
-    constructor(type: string, value?: string | number) {
+    constructor(type: TokenType | Literal, value?: string | number) {
         this.type = type;
         this.value = value;
     }
+}
+
+export enum TokenType {
+    KEYWORD = "keyword", 
+    TYPE = "type", 
+    SPECIAL = "special", 
+    OPERATOR = "operator", 
+    IDENTIFIER = "identifier", 
+    EOF = "EOF", 
+    EOL = "EOL"
+}
+
+export enum Literal {
+    STRING = "LString", 
+    CHAR = "LChar", 
+    INT = "LInt", 
+    FLOAT = "LFloat"
 }
 
 const keywords = [
