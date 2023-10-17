@@ -1,134 +1,118 @@
 import { error } from "./error.ts";
 
 export class Lexer {
-    index = 0;
-    input = [""];
+    private index = 0;
+    private input = [""];
 
-    consume(amount = 1): string {
-        const old = this.input[this.index];
+    private consume(amount = 1): string {
         this.index += amount;
-        return old;
+        return this.input[this.index - amount];
     }
 
-    peek(amount = 1): string {
+    private peek(amount = 1): string {
         return this.input[this.index + amount];
     }
 
-    current(): string {
+    private current(): string {
         return this.input[this.index];
     }
 
-    parseString(): Token {
+    private parseString(): IToken {
         const quote = this.consume(); // First quote
         let string = "";
 
         if (quote == '"') {
             while (this.current() != quote) string += this.consume();
-            this.consume();
+            this.consume(); // Consume end quote
 
-            return new Token(Literal.STRING, string);
+            return { type: Literal.STRING, value: string };
         } else {
             const char = this.consume();
             if (this.current() != quote) error(1);
             this.consume(); // Consume the other quote
-            return new Token(Literal.CHAR, char);
+            return { type: Literal.CHAR, value: char };
         }
     }
 
-    parseNumber(): Token {
+    private parseNumber(): IToken {
         let numString = this.consume();
 
         while (this.current().match(/[0-9]/)) numString += this.consume();
 
-        if (this.current() != "." && this.current() != "f") 
-            return new Token(Literal.INT, parseInt(numString));
+        if (this.current() != "." && this.current() != "f")
+            return { type: Literal.INT, value: parseInt(numString) };
         else if (this.current() == "f") {
             this.consume();
-            return new Token(Literal.FLOAT, parseFloat(numString));
-        } 
+            return { type: Literal.FLOAT, value: parseFloat(numString) };
+        }
 
         numString += this.consume(); // Consume period
         while (this.current().match(/[0-9]/)) numString += this.consume();
         if (this.current() != "f") error(2);
         this.consume() // Consume 'f'
-        
-        return new Token(Literal.FLOAT, parseFloat(numString));
+
+        return {type: Literal.FLOAT, value: parseFloat(numString)};
     }
 
-    tokenize(file: string): Token[] {
+    tokenize(file: string): IToken[] {
+        this.index = 0;
         // Prepare file
         this.input = file
-        .replaceAll(/(\/\*[\s\S]*?\*\/|\/\/[^\r\n]*$)/gm, "") // Remove all Comments
-        .replaceAll(/(\s\s+|\n)/g, "") // Remove whitespace
-        .split(""); // Split into single characters
-        const tokens = Array<Token>();
+            .replaceAll(/(\/\*[\s\S]*?\*\/|\/\/[^\r\n]*$)/gm, "") // Remove all Comments
+            .replaceAll(/(\s\s+|\n)/g, "") // Remove whitespace
+            .split(""); // Split into single characters
 
-        // Generate the tokens
+        const tokens = Array<IToken>();
+
         while (this.index < this.input.length) {
             if (this.current().match(/[A-Za-z_]/)) {
                 // Get an identifier
                 let identifier = this.consume();
                 while (this.current().match(/[A-Za-z0-9_]/)) identifier += this.consume();
 
-                // Check if it's a keyword or a type, else it's an id
-                if (keywords.includes(identifier)) tokens.push(new Token(TokenType.KEYWORD, identifier));
-                else if (types.includes(identifier)) tokens.push(new Token(TokenType.TYPE, identifier));
-                else tokens.push(new Token(TokenType.IDENTIFIER, identifier));
+                const token = { type: TokenType.IDENTIFIER, value: identifier };
+
+                // Check if it's a keyword or a type
+                if (identifier === "return")
+                    token.type = TokenType.RETURN;
+                else if (types.includes(identifier)) token.type = TokenType.TYPE;
+
+                tokens.push(token);
             } else if (this.current().match(/[0-9'"]/)) {
                 // Check for literals
                 if (this.current().match(/('|")/)) tokens.push(this.parseString()); // String
                 else tokens.push(this.parseNumber()); // Number
-            } else if (operators.includes(this.current())) // Check for operators
-                tokens.push(new Token(TokenType.OPERATOR, this.consume()));
-            else if (special.includes(this.current())) // Check for special symbols
-                tokens.push(new Token(TokenType.SPECIAL, this.consume()));
-            else if (this.current() == ";") { this.consume(); tokens.push(new Token(TokenType.EOL)) }
-            else this.consume();
+            } if (this.current() === ";") {
+                tokens.push({ type: TokenType.EOL });
+                this.consume();
+            } else this.consume();
         }
-        tokens.push(new Token(TokenType.EOF));
 
+        tokens.push({ type: TokenType.EOF })
 
         return tokens;
     }
 }
 
-export class Token {
-    type: TokenType | Literal;
-    value: string | number | undefined;
-    constructor(type: TokenType | Literal, value?: string | number) {
-        this.type = type;
-        this.value = value;
-    }
-}
-
 export enum TokenType {
-    KEYWORD = "keyword", 
-    TYPE = "type", 
-    SPECIAL = "special", 
-    OPERATOR = "operator", 
-    IDENTIFIER = "identifier", 
-    EOF = "EOF", 
-    EOL = "EOL"
+    IDENTIFIER = "identifier",
+    TYPE = "type",
+    RETURN = "return",
+    EOL = "EOL",
+    EOF = "EOF",
 }
 
 export enum Literal {
-    STRING = "LString", 
-    CHAR = "LChar", 
-    INT = "LInt", 
-    FLOAT = "LFloat"
+    INT = "LInt",
+    FLOAT = "LFloat",
+    CHAR = "LChar",
+    STRING = "LString",
 }
 
-const keywords = [
-    "if",
-    "else",
-    "while",
-    "for",
-    "return",
-    "break",
-    "continue",
-    "import",
-    ":",
-]
+export interface IToken {
+    type: TokenType | Literal;
+    value?: string | number | boolean;
+}
 
 const types = [
     "void",
@@ -148,7 +132,3 @@ const types = [
     "object",
     "null",
 ]
-
-const special = [".", ",", "(", ")", "[", "]", "{", "}", "@", "#"]
-
-const operators = ["=", "+", "-", "*", "/", ">", "<", "!", "&", "|", "^"]

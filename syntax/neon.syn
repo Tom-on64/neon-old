@@ -4,7 +4,7 @@
 (* Ignores optional whitespace, targets minified code *)
 
 program = codeblock EOF;
-codeblock = (definition|statement|expression)*;
+codeblock = (definition|statement|expression EOL)*;
 
 definition = (funcDefinition); (* Usually no return value *)
     funcDefinition = type WS identifier "(" _argList ")" "{" codeblock "}";

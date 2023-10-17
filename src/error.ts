@@ -9,4 +9,6 @@ const errors = [
     "Unknown Error.", // 0
     "[LEX] Expected single character, but got more.", // 1
     "[LEX] Expected 'f' after float literal.", // 2
+    "[AST] Failed while parsing expression.", // 3
+    "[AST] Expected EOL token, but got something else.", // 4
 ]

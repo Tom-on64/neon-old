@@ -1,0 +1,14 @@
+(* Current Neon Syntax *)
+
+program = statement*;
+
+statement = (return|declaration);
+
+declaration = type identifier "=" expression;
+return = "return" WS expr;
+
+expression = intLit;
+
+type = ?type?;
+intLit = ?LInt?;
+
