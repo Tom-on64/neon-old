@@ -5,10 +5,10 @@ program = statement*;
 statement = (return|declaration);
 
 declaration = type identifier "=" expression;
-return = "return" WS expr;
+return = "return" expr;
 
-expression = intLit;
+expression = (intLit|identifier);
 
+identifier = [A-Za-z_][A-Za-z0-9_]*;
 type = ?type?;
 intLit = ?LInt?;
-

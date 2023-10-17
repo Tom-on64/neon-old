@@ -3,9 +3,9 @@ import { IToken, TokenType, Literal } from "./lexer.ts";
 
 export class Parser {
     private index = 0;
-    private tokens = new Array<Token>();
+    private tokens = new Array<IToken>();
 
-    private consume(amount = 1): Token {
+    private consume(amount = 1): IToken {
         const token = this.tokens[this.index];
         this.index += amount;
         return token;
@@ -42,11 +42,12 @@ export class Parser {
 }
 
 interface INodeExpr {
-    LInt: IToken;
+    LInt?: IToken;
+    ident?: IToken;
 }
 interface INodeReturn {
     value: INodeExpr;
 }
 export interface INodeProgram {
-    return: INodeReturn | undefined;
+    return: INodeReturn;
 }

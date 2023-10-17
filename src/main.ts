@@ -11,5 +11,5 @@ const tokens = lexer.tokenize(file);
 console.log(tokens)
 const ast = parser.parse(tokens);
 console.log(ast);
-const program = generator.generate(ast);
-console.log(program);
+// const program = generator.generate(ast);
+// console.log(program);
