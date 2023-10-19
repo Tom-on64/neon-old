@@ -153,3 +153,24 @@ const types = [
 const special = [".", ",", "(", ")", "[", "]", "{", "}", "@", "#"]
 
 const operators = ["=", "+", "-", "*", "/", ">", "<", "!", "&", "|", "^"]
+
+/*
+enum Type {
+    VOID = "void",
+    BYTE = "byte",
+    SBYTE = "sbyte",
+    SHORT = "short",
+    USHORT = "ushort",
+    INT = "int",
+    UINT = "uint",
+    LONG = "long",
+    ULONG = "ulong",
+    FLOAT = "float",
+    DOUBLE = "double",
+    CHAR = "char",
+    BOOL = "bool",
+    STRING = "string",
+    OBJECT = "object",
+    NULL = "null",
+}
+*/

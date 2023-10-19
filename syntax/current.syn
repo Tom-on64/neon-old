@@ -1,7 +1,8 @@
 (* Current Neon Syntax *)
 
-program = statement*;
+program = statement*; (* Root Node*)
 
+(* Nodes *)
 statement = (return|declaration);
 
 declaration = type identifier "=" expression;
@@ -9,6 +10,7 @@ return = "return" expr;
 
 expression = (intLit|identifier);
 
+(* IToken *)
 identifier = [A-Za-z_][A-Za-z0-9_]*;
 type = ?type?;
 intLit = ?LInt?;

@@ -1,0 +1,1 @@
+{"statements":[{"statement":{"type":{"type":"type","value":"int"},"identifier":{"type":"identifier","value":"x"},"expression":{"value":{"type":"LInt","value":0}}}},{"statement":{"returnExpr":{"value":{"type":"identifier","value":"x"}}}}]}

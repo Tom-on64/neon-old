@@ -51,7 +51,7 @@ export class Lexer {
         if (this.current() != "f") error(2);
         this.consume() // Consume 'f'
 
-        return {type: Literal.FLOAT, value: parseFloat(numString)};
+        return { type: Literal.FLOAT, value: parseFloat(numString) };
     }
 
     tokenize(file: string): IToken[] {
@@ -73,15 +73,18 @@ export class Lexer {
                 const token = { type: TokenType.IDENTIFIER, value: identifier };
 
                 // Check if it's a keyword or a type
-                if (identifier === "return")
-                    token.type = TokenType.RETURN;
-                else if (types.includes(identifier)) token.type = TokenType.TYPE;
+                if (identifier === "return") token.type = TokenType.RETURN;
+                else if (identifier === "null") token.type = TokenType.NULL;
+                else if (types.includes(identifier)) token.type = TokenType.TYPE; 
 
                 tokens.push(token);
             } else if (this.current().match(/[0-9'"]/)) {
                 // Check for literals
                 if (this.current().match(/('|")/)) tokens.push(this.parseString()); // String
                 else tokens.push(this.parseNumber()); // Number
+            } if (this.current() === "=") {
+                tokens.push({ type: TokenType.EQUALS });
+                this.consume();
             } if (this.current() === ";") {
                 tokens.push({ type: TokenType.EOL });
                 this.consume();
@@ -96,8 +99,10 @@ export class Lexer {
 
 export enum TokenType {
     IDENTIFIER = "identifier",
+    EQUALS = "equals", 
     TYPE = "type",
     RETURN = "return",
+    NULL = "null", 
     EOL = "EOL",
     EOF = "EOF",
 }
@@ -107,11 +112,6 @@ export enum Literal {
     FLOAT = "LFloat",
     CHAR = "LChar",
     STRING = "LString",
-}
-
-export interface IToken {
-    type: TokenType | Literal;
-    value?: string | number | boolean;
 }
 
 const types = [
@@ -132,3 +132,10 @@ const types = [
     "object",
     "null",
 ]
+
+export interface IToken {
+    type: TokenType | Literal;
+    value?: string | number | boolean;
+}
+
+export const NULL: IToken = { type: TokenType.NULL };
