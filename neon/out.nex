@@ -1,1 +1,40 @@
-{"statements":[{"statement":{"type":{"type":"type","value":"int"},"identifier":{"type":"identifier","value":"x"},"expression":{"value":{"type":"LInt","value":1}}}}]}
+{
+  "statements": [
+    {
+      "type": {
+        "type": "type",
+        "value": "int"
+      },
+      "identifier": {
+        "type": "identifier",
+        "value": "x"
+      },
+      "expression": {
+        "value": {
+          "lhs": {
+            "value": {
+              "type": "LInt",
+              "value": 1
+            }
+          },
+          "rhs": {
+            "value": {
+              "lhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 2
+                }
+              },
+              "rhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 3
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
