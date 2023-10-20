@@ -1,2 +1,4 @@
-int x = 1 + 2 + 3;
+int a = 4;
+int b = 5;
+// int x = a + b;
 return x;

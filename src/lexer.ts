@@ -62,41 +62,39 @@ export class Lexer {
             .replaceAll(/(\s\s+|\n)/g, "") // Remove whitespace
             .split(""); // Split into single characters
 
-        const tokens = Array<IToken>();
+        const tokens: IToken[] = [];
 
         while (this.index < this.input.length) {
             if (this.current().match(/[A-Za-z_]/)) {
                 // Get an identifier
                 let identifier = this.consume();
                 while (this.current().match(/[A-Za-z0-9_]/)) identifier += this.consume();
-
                 const token = { type: TokenType.IDENTIFIER, value: identifier };
 
                 // Check if it's a keyword or a type
                 if (identifier === "return") token.type = TokenType.RETURN;
                 else if (identifier === "null") token.type = TokenType.NULL;
                 else if (types.includes(identifier)) token.type = TokenType.TYPE; 
-
                 tokens.push(token);
             } else if (this.current().match(/[0-9'"]/)) {
                 // Check for literals
                 if (this.current().match(/('|")/)) tokens.push(this.parseString()); // String
                 else tokens.push(this.parseNumber()); // Number
-            } if (this.current() === "=") {
+            } else if (this.current() === "=") {
                 tokens.push({ type: TokenType.EQUALS });
                 this.consume();
-            } if (this.current() === ";") {
+            } else if (this.current() === ";") {
                 tokens.push({ type: TokenType.EOL });
                 this.consume();
-            } if (this.current() === "+") {
+                console.log("EOL -> " + this.current());
+            } else if (this.current() === "+") {
                 tokens.push({ type: TokenType.PLUS });
                 this.consume();
-            } if (this.current() === "*") {
+            } else if (this.current() === "*") {
                 tokens.push({ type: TokenType.MULT });
                 this.consume();
             } else this.consume();
         }
-
         tokens.push({ type: TokenType.EOF })
 
         return tokens;

@@ -64,7 +64,9 @@ export class Parser {
                     programNode.statements.push({ type, identifier, expression: { value: NULL } });
                 } else if (this.current().type === TokenType.EQUALS) {
                     this.consume(); // Consume the '='
-                    programNode.statements.push({ type, identifier, expression: this.parseExpression() })
+                    programNode.statements.push({ type, identifier, expression: this.parseExpression() });
+                    if (this.current().type !== TokenType.EOL) error(4);
+                    this.consume(); // Consume the ';'
                 } else error(6);
             } else this.consume();
         }

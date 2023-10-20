@@ -12,4 +12,5 @@
   - Variable support
   - Started working on expressions
 ### [0.0.4] Expressions
-  - 
+  - Add add
+  - Add multiplication

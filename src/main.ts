@@ -8,7 +8,7 @@ const parser = new Parser();
 const generator = new Generator();
 
 const tokens = lexer.tokenize(file);
-console.log(tokens)
+// console.log(tokens)
 const ast = parser.parse(tokens);
 // console.log(ast);
 console.log(JSON.stringify(ast, undefined, 2));
