@@ -21,11 +21,11 @@ export class Parser {
     }
 
     private parseExpression(): INodeExpr {
-        if (this.current().type === Literal.INT) {
-            return { value: this.consume() };
-        } else if (this.current().type === TokenType.IDENTIFIER) {
-            return { value: this.consume() };
-        } else return { value: NULL };
+        if (this.current().type === Literal.INT)
+            return { value: { value: this.consume() } };
+        else if (this.current().type === TokenType.IDENTIFIER)
+            return { value: { value: this.consume() } };
+        else return { value: { value: NULL } };
     }
 
     parse(tokens: IToken[]): INodeProgram {
@@ -35,20 +35,20 @@ export class Parser {
         const programNode: INodeProgram = { statements: [] };
 
         while (this.current().type !== TokenType.EOF) {
-            if (this.current().type === TokenType.RETURN) { 
+            if (this.current().type === TokenType.RETURN) {
                 // Return statement
                 this.consume(); // Consume the return
                 const statement: INodeStatement = { statement: { returnExpr: this.parseExpression() } };
                 programNode.statements.push(statement);
                 if (this.current().type !== TokenType.EOL) error(4); // ';' Check
                 else this.consume();
-            } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) { 
+            } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) {
                 // Variable declaration
                 const type = this.consume();
                 const identifier = this.consume();
                 if (this.current().type === TokenType.EOL) { // Declaration without a value
                     this.consume(); // Consume the ';'
-                    programNode.statements.push({ statement: { type, identifier, expression: { value: NULL } } });
+                    programNode.statements.push({ statement: { type, identifier, expression: { value: { value: NULL } } } });
                 } else if (this.current().type === TokenType.EQUALS) {
                     this.consume(); // Consume the '='
                     programNode.statements.push({ statement: { type, identifier, expression: this.parseExpression() } })
@@ -63,7 +63,21 @@ export class Parser {
 
 
 interface INodeExpr {
+    value: INodeTerm | INodeBinExpr;
+}
+interface INodeTerm {
     value: IToken;
+}
+interface INodeBinAdd {
+    lhs: INodeExpr;
+    rhs: INodeExpr;
+}
+interface INodeBinMult {
+    lhs: INodeExpr;
+    rhs: INodeExpr;
+}
+interface INodeBinExpr {
+    var: INodeBinAdd | INodeBinMult;
 }
 interface INodeReturn {
     returnExpr: INodeExpr;

@@ -88,6 +88,12 @@ export class Lexer {
             } if (this.current() === ";") {
                 tokens.push({ type: TokenType.EOL });
                 this.consume();
+            } if (this.current() === "+") {
+                tokens.push({ type: TokenType.PLUS });
+                this.consume();
+            } if (this.current() === "*") {
+                tokens.push({ type: TokenType.MULT });
+                this.consume();
             } else this.consume();
         }
 
@@ -100,6 +106,8 @@ export class Lexer {
 export enum TokenType {
     IDENTIFIER = "identifier",
     EQUALS = "equals", 
+    PLUS = "plus", 
+    MULT = "mult", 
     TYPE = "type",
     RETURN = "return",
     NULL = "null", 

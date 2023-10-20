@@ -3,12 +3,14 @@
 program = statement*; (* Root Node*)
 
 (* Nodes *)
-statement = (return|declaration);
+statement = return | declaration;
 
 declaration = type identifier "=" expression;
 return = "return" expr;
 
-expression = (intLit|identifier);
+expression = term | binExpressions;
+term = intLit | identifier;
+binExpression = (expression "*" expression) | (expression "+" expression);
 
 (* IToken *)
 identifier = [A-Za-z_][A-Za-z0-9_]*;

@@ -1,0 +1,86 @@
+## TODO
+- [ ] Neon V0.1.0
+  - [x] Define syntax 
+  - [ ] Write base compiler in TypeScript 
+    - [x] Tokenize (Somewhat)
+      - [x] Define tokens
+      - [x] Peek(), Consume()
+      - [x] Ignore Comments
+    - [ ] Parse -> AST
+      - [x] Define AST syntax
+      - [ ] Statements
+        - [x] Return
+        - [x] Var Declare
+        - [ ] Func Declare
+        - [ ] If/else
+          - [ ] Logic
+        - [ ] Loops
+          - [ ] For
+          - [ ] While
+      - [ ] Expressions
+        - [x] Variable access
+        - [ ] Func Calls
+        - [ ] Logic expressions
+          - [ ] Define what is True and False
+          - [ ] And / Or / Not
+        - [ ] Operations
+          - [ ] Addition / Subtraction
+          - [ ] Multiplication / Division
+          - [ ] Exponentiatiation
+          - [ ] Parenthesis
+      - [ ] Pain
+    - [ ] Generator
+      - [ ] Translate code into objects
+    - [ ] Linker
+      - [ ] Link objects into .nex
+    - [ ] Runner? (maybe)
+    - [x] Error handling
+- [ ] Neon V0.2.0
+  - [ ] More types
+    - [ ] String
+    - [ ] Signed/Unsigned Ints
+    - [ ] Floats
+    - [ ] Bool
+- [ ] Neon V0.3.0
+  - [ ] Importing
+  - [ ] STD Lib
+    - [ ] Base
+      - [ ] IO
+      - [ ] Math
+- [ ] Neon V0.4.0
+  - [ ] OOP features
+    - [ ] class
+      - [ ] modifiers
+        - [ ] private
+        - [ ] public
+        - [ ] protected
+        - [ ] more
+    - [ ] struct
+    - [ ] enum
+- [ ] Neon V0.5.0
+  - [ ] User defined types
+  - [ ] More std lib stuff
+- [ ] Neon V0.6.0
+  - [ ] something idk
+- [ ] Neon V0.7.0
+  - [ ] Optimization
+  - [ ] Testing
+  - [ ] Fixing
+  - [ ] Optimization
+  - [ ] Testing
+  - [ ] Fixing
+- [ ] Neon V0.8.0
+  - [ ] Custom .nex (not compressed JSON)
+- [ ] Neon V0.9.0
+  - [ ] Write full compiler in Neon 
+    - [ ] Translate/rewrite TS code
+    - [ ] Compile using TS version
+- [ ] Neon V1.0.0!
+  - [ ] Compile Neon into an executable
+    - [ ] Windows
+    - [ ] MacOS
+    - [ ] Linux
+  - [ ] Compile libs
+  - [ ] Release
+  - [ ] Add to package managers
+  - [ ] Release the Neon extension

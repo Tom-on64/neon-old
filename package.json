@@ -1,7 +1,7 @@
 {
   "name": "neon",
-  "version": "0.0.2",
-  "description": "---",
+  "version": "0.0.3",
+  "description": "The Neon programming language", 
   "main": "index.js",
   "directories": {
     "doc": "docs", 

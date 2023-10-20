@@ -14,4 +14,5 @@ const errors = [
     "[AST] Peek out of range.", // 5
     "[AST] Expected '='.", // 6
     "[AST] Expression expected.", // 7
+    "[AST] Unsupported binary operator.", // 8
 ]
