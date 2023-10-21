@@ -11,3 +11,7 @@ Currently outputs the AST json data
 
 ### Check out the [TODO List](TODO.md)
 ### You can see the [Change Log](CHANGELOG.md)
+
+## VSCode Extension
+I made an extension for VSCode to add Neon support \
+Here's the [Repository](https://github.com/Tom-on64/neon-syntax)
