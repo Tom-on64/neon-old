@@ -89,8 +89,14 @@ export class Lexer {
             } else if (this.current() === "+") {
                 tokens.push({ type: TokenType.PLUS });
                 this.consume();
+            } else if (this.current() === "-") {
+                tokens.push({ type: TokenType.MINUS });
+                this.consume();
             } else if (this.current() === "*") {
-                tokens.push({ type: TokenType.MULT });
+                tokens.push({ type: TokenType.STAR });
+                this.consume();
+            } else if (this.current() === "/") {
+                tokens.push({ type: TokenType.SLASH });
                 this.consume();
             } else this.consume();
         }
@@ -104,7 +110,9 @@ export enum TokenType {
     IDENTIFIER = "identifier",
     EQUALS = "equals", 
     PLUS = "plus", 
-    MULT = "mult", 
+    MINUS = "minus", 
+    STAR = "star", 
+    SLASH = "slash", 
     TYPE = "type",
     RETURN = "return",
     NULL = "null", 
@@ -147,8 +155,10 @@ export const NULL: IToken = { type: TokenType.NULL };
 
 export const getBinPrec = (binOp: TokenType | Literal): number | null => {
     switch (binOp) {
-        case TokenType.MULT: return 1;
-        case TokenType.PLUS: return 0;
+        case TokenType.STAR:
+        case TokenType.SLASH: return 1;
+        case TokenType.PLUS:
+        case TokenType.MINUS: return 0;
         default: return null;
     }
 }

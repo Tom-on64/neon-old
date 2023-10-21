@@ -9,4 +9,5 @@ Neon works by compiling into Neon Executables (.nex), which can be ran by the Ne
 You can check on the current grammar [here](syntax/current.syn) (I'll try to keep updating it) \
 Currently outputs the AST json data
 
-## Check out the [TODO List](TODO.md)
+### Check out the [TODO List](TODO.md)
+### You can see the [Change Log](CHANGELOG.md)

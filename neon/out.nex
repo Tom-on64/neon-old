@@ -15,48 +15,8 @@
             "value": {
               "lhs": {
                 "value": {
-                  "lhs": {
-                    "value": {
-                      "lhs": {
-                        "value": {
-                          "type": "LInt",
-                          "value": 1
-                        }
-                      },
-                      "rhs": {
-                        "value": {
-                          "lhs": {
-                            "value": {
-                              "type": "LInt",
-                              "value": 2
-                            }
-                          },
-                          "rhs": {
-                            "value": {
-                              "type": "LInt",
-                              "value": 3
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "rhs": {
-                    "value": {
-                      "lhs": {
-                        "value": {
-                          "type": "LInt",
-                          "value": 3
-                        }
-                      },
-                      "rhs": {
-                        "value": {
-                          "type": "LInt",
-                          "value": 5
-                        }
-                      }
-                    }
-                  }
+                  "type": "LInt",
+                  "value": 2
                 }
               },
               "rhs": {
@@ -69,8 +29,74 @@
           },
           "rhs": {
             "value": {
-              "type": "LInt",
-              "value": 7
+              "lhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 8
+                }
+              },
+              "rhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 2
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": {
+        "type": "type",
+        "value": "int"
+      },
+      "identifier": {
+        "type": "identifier",
+        "value": "y"
+      },
+      "expression": {
+        "value": {
+          "lhs": {
+            "value": {
+              "lhs": {
+                "value": {
+                  "lhs": {
+                    "value": {
+                      "type": "identifier",
+                      "value": "x"
+                    }
+                  },
+                  "rhs": {
+                    "value": {
+                      "type": "LInt",
+                      "value": 10
+                    }
+                  }
+                }
+              },
+              "rhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 29
+                }
+              }
+            }
+          },
+          "rhs": {
+            "value": {
+              "lhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 10
+                }
+              },
+              "rhs": {
+                "value": {
+                  "type": "LInt",
+                  "value": 3
+                }
+              }
             }
           }
         }
@@ -80,7 +106,7 @@
       "returnExpr": {
         "value": {
           "type": "identifier",
-          "value": "x"
+          "value": "y"
         }
       }
     }

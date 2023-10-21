@@ -14,6 +14,7 @@
         - [ ] Func Declare
         - [ ] If/else
           - [ ] Logic
+          - [ ] Scopes
         - [ ] Loops
           - [ ] For
           - [ ] While
@@ -24,10 +25,11 @@
           - [ ] Define what is True and False
           - [ ] And / Or / Not
         - [ ] Operations
-          - [ ] Addition / Subtraction
-          - [ ] Multiplication / Division
+          - [x] Addition / Subtraction
+          - [x] Multiplication / Division
           - [ ] Exponentiatiation
           - [ ] Parenthesis
+          - [x] Operator precidence
       - [ ] Pain
     - [ ] Generator
       - [ ] Translate code into objects

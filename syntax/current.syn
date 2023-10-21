@@ -10,7 +10,7 @@ return = "return" expr;
 
 expression = term | binExpressions;
 term = intLit | identifier;
-binExpression = (expression "*" expression) | (expression "+" expression); (* First expression will always be a term *)
+binExpression = (expression "*" expression) | (expression "/" expression) | (expression "+" expression) | (expression "-" expression);
 
 (* IToken *)
 identifier = [A-Za-z_][A-Za-z0-9_]*;

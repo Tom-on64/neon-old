@@ -49,8 +49,14 @@ export class Parser {
             if (op.type === TokenType.PLUS) {
                 const add: INodeBinAdd = { lhs: { value: term_lhs.value }, rhs: term_rhs };
                 expr.value = add;
-            } else if (op.type === TokenType.MULT) {
+            } else if (op.type === TokenType.MINUS) {
+                const mult: INodeBinSub = { lhs: { value: term_lhs.value }, rhs: term_rhs };
+                expr.value = mult;
+            } else if (op.type === TokenType.STAR) {
                 const mult: INodeBinMult = { lhs: { value: term_lhs.value }, rhs: term_rhs };
+                expr.value = mult;
+            } else if (op.type === TokenType.SLASH) {
+                const mult: INodeBinDiv = { lhs: { value: term_lhs.value }, rhs: term_rhs };
                 expr.value = mult;
             } else error(8);
 
@@ -102,11 +108,19 @@ interface INodeBinAdd {
     lhs: INodeExpr;
     rhs: INodeExpr;
 }
+interface INodeBinSub {
+    lhs: INodeExpr;
+    rhs: INodeExpr;
+}
 interface INodeBinMult {
     lhs: INodeExpr;
     rhs: INodeExpr;
 }
-type INodeBinExpr = INodeBinAdd | INodeBinMult;
+interface INodeBinDiv {
+    lhs: INodeExpr;
+    rhs: INodeExpr;
+}
+type INodeBinExpr = INodeBinAdd | INodeBinSub | INodeBinMult | INodeBinDiv;
 interface INodeReturn {
     returnExpr: INodeExpr;
 }
