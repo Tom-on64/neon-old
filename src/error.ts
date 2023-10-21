@@ -15,4 +15,5 @@ const errors = [
     "[AST] Expected '='.", // 6
     "[AST] Expression expected.", // 7
     "[AST] Unsupported binary operator.", // 8
+    "[AST] Expected ')'.", // 9
 ]

@@ -98,6 +98,12 @@ export class Lexer {
             } else if (this.current() === "/") {
                 tokens.push({ type: TokenType.SLASH });
                 this.consume();
+            } else if (this.current() === "(") {
+                tokens.push({ type: TokenType.OPENPAREN });
+                this.consume();
+            } else if (this.current() === ")") {
+                tokens.push({ type: TokenType.CLOSEPAREN });
+                this.consume();
             } else this.consume();
         }
         tokens.push({ type: TokenType.EOF })
@@ -113,6 +119,8 @@ export enum TokenType {
     MINUS = "minus", 
     STAR = "star", 
     SLASH = "slash", 
+    OPENPAREN = "openparen", 
+    CLOSEPAREN = "closeparen", 
     TYPE = "type",
     RETURN = "return",
     NULL = "null", 

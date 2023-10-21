@@ -9,7 +9,7 @@ declaration = type identifier "=" expression;
 return = "return" expr;
 
 expression = term | binExpressions;
-term = intLit | identifier;
+term = intLit | identifier | "(" expr ")";
 binExpression = (expression "*" expression) | (expression "/" expression) | (expression "+" expression) | (expression "-" expression);
 
 (* IToken *)

@@ -25,7 +25,13 @@ export class Parser {
             return this.consume();
         else if (this.current().type === TokenType.IDENTIFIER)
             return this.consume();
-        else return NULL;
+        else if (this.current().type === TokenType.OPENPAREN) {
+            this.consume() // Consume the '('
+            const paren: INodeParen = { innerExpr: this.parseExpression() };
+            if (this.current().type !== TokenType.CLOSEPAREN) error(9);
+            this.consume() // Consume the ')'
+            return paren;
+        } else return NULL;
     }
 
     private parseExpression(min_prec = 0): INodeExpr {
@@ -37,7 +43,6 @@ export class Parser {
         while (true) {
             const op = this.current();
             const prec = getBinPrec(this.current().type);
-            console.log(min_prec, prec, op);
             if (!op || prec === null || prec < min_prec) break;
 
             this.consume(); // Consume the operator
@@ -103,7 +108,10 @@ export class Parser {
 interface INodeExpr {
     value: INodeTerm | INodeBinExpr;
 }
-type INodeTerm = IToken;
+interface INodeParen {
+    innerExpr: INodeExpr
+}
+type INodeTerm = IToken | INodeParen;
 interface INodeBinAdd {
     lhs: INodeExpr;
     rhs: INodeExpr;

@@ -21,26 +21,30 @@
               },
               "rhs": {
                 "value": {
-                  "type": "LInt",
-                  "value": 6
+                  "innerExpr": {
+                    "value": {
+                      "lhs": {
+                        "value": {
+                          "type": "LInt",
+                          "value": 6
+                        }
+                      },
+                      "rhs": {
+                        "value": {
+                          "type": "LInt",
+                          "value": 8
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "rhs": {
             "value": {
-              "lhs": {
-                "value": {
-                  "type": "LInt",
-                  "value": 8
-                }
-              },
-              "rhs": {
-                "value": {
-                  "type": "LInt",
-                  "value": 2
-                }
-              }
+              "type": "LInt",
+              "value": 2
             }
           }
         }
