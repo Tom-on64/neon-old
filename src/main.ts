@@ -10,9 +10,7 @@ const generator = new Generator();
 const tokens = lexer.tokenize(file);
 // console.log(tokens)
 const ast = parser.parse(tokens);
-// console.log(ast);
 console.log(JSON.stringify(ast, undefined, 2));
 const program = generator.generate(ast);
-// console.log(program);
 
 Deno.writeTextFileSync("neon/out.nex", program);

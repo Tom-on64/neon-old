@@ -86,7 +86,6 @@ export class Lexer {
             } else if (this.current() === ";") {
                 tokens.push({ type: TokenType.EOL });
                 this.consume();
-                console.log("EOL -> " + this.current());
             } else if (this.current() === "+") {
                 tokens.push({ type: TokenType.PLUS });
                 this.consume();
@@ -145,3 +144,11 @@ export interface IToken {
 }
 
 export const NULL: IToken = { type: TokenType.NULL };
+
+export const getBinPrec = (binOp: TokenType | Literal): number | null => {
+    switch (binOp) {
+        case TokenType.MULT: return 1;
+        case TokenType.PLUS: return 0;
+        default: return null;
+    }
+}

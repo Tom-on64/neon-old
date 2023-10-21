@@ -1,5 +1,5 @@
 import { error } from "./error.ts";
-import { IToken, TokenType, Literal, NULL } from "./lexer.ts";
+import { IToken, TokenType, Literal, NULL, getBinPrec } from "./lexer.ts";
 
 export class Parser {
     private index = 0;
@@ -28,17 +28,36 @@ export class Parser {
         else return NULL;
     }
 
-    private parseExpression(): INodeExpr {
-        const term = this.parseTerm();
+    private parseExpression(min_prec = 0): INodeExpr {
+        const term_lhs: INodeExpr = { value: this.parseTerm() };
+        if (term_lhs.value === NULL) return { value: NULL };
 
-        // Check for a Binary Operation
-        if (this.current().type === TokenType.PLUS) {
-            this.consume(); // Consume the '+'
-            const rhs = this.parseExpression();
+        const expr: INodeExpr = { value: NULL };
 
-            const binAdd: INodeBinAdd = { lhs: { value: term }, rhs };
-            return { value: binAdd };
-        } else return { value: term };
+        while (true) {
+            const op = this.current();
+            const prec = getBinPrec(this.current().type);
+            console.log(min_prec, prec, op);
+            if (!op || prec === null || prec < min_prec) break;
+
+            this.consume(); // Consume the operator
+            const next_min_prec = prec + 1;
+            const term_rhs = this.parseExpression(next_min_prec);
+
+            if (term_rhs.value === NULL) error(3);
+
+            if (op.type === TokenType.PLUS) {
+                const add: INodeBinAdd = { lhs: { value: term_lhs.value }, rhs: term_rhs };
+                expr.value = add;
+            } else if (op.type === TokenType.MULT) {
+                const mult: INodeBinMult = { lhs: { value: term_lhs.value }, rhs: term_rhs };
+                expr.value = mult;
+            } else error(8);
+
+            term_lhs.value = expr.value;
+        }
+
+        return term_lhs;
     }
 
     parse(tokens: IToken[]): INodeProgram {
@@ -74,8 +93,6 @@ export class Parser {
         return programNode;
     }
 }
-
-
 
 interface INodeExpr {
     value: INodeTerm | INodeBinExpr;
