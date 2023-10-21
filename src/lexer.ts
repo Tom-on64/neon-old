@@ -65,7 +65,8 @@ export class Lexer {
         const tokens: IToken[] = [];
 
         while (this.index < this.input.length) {
-            if (this.current().match(/[A-Za-z_]/)) {
+            if (this.current().match(/\s/)) this.consume(); // Ignore Whitespace
+            else if (this.current().match(/[A-Za-z_]/)) {
                 // Get an identifier
                 let identifier = this.consume();
                 while (this.current().match(/[A-Za-z0-9_]/)) identifier += this.consume();
@@ -104,7 +105,7 @@ export class Lexer {
             } else if (this.current() === ")") {
                 tokens.push({ type: TokenType.CLOSEPAREN });
                 this.consume();
-            } else this.consume();
+            } else error(10, [this.consume()]);
         }
         tokens.push({ type: TokenType.EOF })
 

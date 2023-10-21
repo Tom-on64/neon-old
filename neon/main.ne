@@ -1,3 +1,5 @@
-int x = 2 * (6 + 8) / 2;
-int y = x * 10 + 29 - 10 / 3; 
-return y;
+int a = 1 + 2 * 3;
+int b = (10 - 3 * 6) / 2;
+int x = a + b;
+
+return x;

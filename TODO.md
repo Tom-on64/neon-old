@@ -19,16 +19,15 @@
           - [ ] For
           - [ ] While
       - [ ] Expressions
-        - [x] Variable access
+        - [x] Variables
         - [ ] Func Calls
         - [ ] Logic expressions
           - [ ] Define what is True and False
           - [ ] And / Or / Not
-        - [ ] Operations
+        - [x] Operations
           - [x] Addition / Subtraction
           - [x] Multiplication / Division
-          - [ ] Exponentiatiation
-          - [ ] Parenthesis
+          - [x] Parenthesis
           - [x] Operator precidence
       - [ ] Pain
     - [ ] Generator
@@ -43,6 +42,7 @@
     - [ ] Signed/Unsigned Ints
     - [ ] Floats
     - [ ] Bool
+  - [ ] Exponentiatiation
 - [ ] Neon V0.3.0
   - [ ] Importing
   - [ ] STD Lib

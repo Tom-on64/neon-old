@@ -1,7 +1,9 @@
-export const error = (code = 0) => {
-    const err = errors[code];
+export const error = (code = 0, args: string[] = []) => {
+    let err = errors[code];
 
-    console.error(`\u001b[31mERROR: ${err ? err : "Unknown Error"}    \u001b[90mNE${code}`);
+    args.forEach((arg, i) => {err = err.replaceAll(`%${i}`, arg)});
+
+    console.error(`\u001b[31mERROR: ${err ? err : "Unknown Error"}    \u001b[1m\u001b[90mNE${code}\u001b[0m`);
     Deno.exit(code);
 }
 
@@ -16,4 +18,5 @@ const errors = [
     "[AST] Expression expected.", // 7
     "[AST] Unsupported binary operator.", // 8
     "[AST] Expected ')'.", // 9
+    "[LEX] Invalid character '%0'.", // 10
 ]

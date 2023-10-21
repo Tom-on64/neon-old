@@ -7,11 +7,17 @@
       },
       "identifier": {
         "type": "identifier",
-        "value": "x"
+        "value": "a"
       },
       "expression": {
         "value": {
           "lhs": {
+            "value": {
+              "type": "LInt",
+              "value": 1
+            }
+          },
+          "rhs": {
             "value": {
               "lhs": {
                 "value": {
@@ -21,18 +27,48 @@
               },
               "rhs": {
                 "value": {
-                  "innerExpr": {
+                  "type": "LInt",
+                  "value": 3
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": {
+        "type": "type",
+        "value": "int"
+      },
+      "identifier": {
+        "type": "identifier",
+        "value": "b"
+      },
+      "expression": {
+        "value": {
+          "lhs": {
+            "value": {
+              "innerExpr": {
+                "value": {
+                  "lhs": {
+                    "value": {
+                      "type": "LInt",
+                      "value": 10
+                    }
+                  },
+                  "rhs": {
                     "value": {
                       "lhs": {
                         "value": {
                           "type": "LInt",
-                          "value": 6
+                          "value": 3
                         }
                       },
                       "rhs": {
                         "value": {
                           "type": "LInt",
-                          "value": 8
+                          "value": 6
                         }
                       }
                     }
@@ -57,50 +93,20 @@
       },
       "identifier": {
         "type": "identifier",
-        "value": "y"
+        "value": "x"
       },
       "expression": {
         "value": {
           "lhs": {
             "value": {
-              "lhs": {
-                "value": {
-                  "lhs": {
-                    "value": {
-                      "type": "identifier",
-                      "value": "x"
-                    }
-                  },
-                  "rhs": {
-                    "value": {
-                      "type": "LInt",
-                      "value": 10
-                    }
-                  }
-                }
-              },
-              "rhs": {
-                "value": {
-                  "type": "LInt",
-                  "value": 29
-                }
-              }
+              "type": "identifier",
+              "value": "a"
             }
           },
           "rhs": {
             "value": {
-              "lhs": {
-                "value": {
-                  "type": "LInt",
-                  "value": 10
-                }
-              },
-              "rhs": {
-                "value": {
-                  "type": "LInt",
-                  "value": 3
-                }
-              }
+              "type": "identifier",
+              "value": "b"
             }
           }
         }
@@ -110,7 +116,7 @@
       "returnExpr": {
         "value": {
           "type": "identifier",
-          "value": "y"
+          "value": "x"
         }
       }
     }
