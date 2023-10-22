@@ -14,7 +14,7 @@
         - [ ] Func Declare
         - [ ] If/else
           - [ ] Logic
-          - [ ] Scopes
+          - [x] Scopes
         - [ ] Loops
           - [ ] For
           - [ ] While

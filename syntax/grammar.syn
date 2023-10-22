@@ -3,7 +3,7 @@
 program = statement*; (* Root Node*)
 
 (* Nodes *)
-statement = return | declaration;
+statement = return | declaration | ("{" statement* "}");
 
 declaration = type identifier "=" expression;
 return = "return" expr;

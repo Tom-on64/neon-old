@@ -1,4 +1,4 @@
-export const error = (code = 0, args: string[] = []) => {
+export const error = (code = 0, args: string[] = []): never => {
     let err = errors[code];
 
     args.forEach((arg, i) => {err = err.replaceAll(`%${i}`, arg)});
@@ -19,4 +19,5 @@ const errors = [
     "[AST] Unsupported binary operator.", // 8
     "[AST] Expected ')'.", // 9
     "[LEX] Invalid character '%0'.", // 10
+    "[AST] Expected statement, but got %0.", // 11
 ]

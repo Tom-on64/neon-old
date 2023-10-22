@@ -60,7 +60,7 @@ export class Parser {
             } else if (op.type === TokenType.STAR) {
                 const mult: INodeBinMult = { lhs: { value: term_lhs.value }, rhs: term_rhs };
                 expr.value = mult;
-            } else if (op.type === TokenType.SLASH) {
+            } else if (op.type === TokenType.FSLASH) {
                 const mult: INodeBinDiv = { lhs: { value: term_lhs.value }, rhs: term_rhs };
                 expr.value = mult;
             } else error(8);
@@ -71,35 +71,52 @@ export class Parser {
         return term_lhs;
     }
 
+    private parseStatement(): INodeStatement {
+        if (this.current().type === TokenType.RETURN) {
+            // Return statement
+            this.consume(); // Consume the return
+            const statement: INodeReturn = { returnExpr: this.parseExpression() };
+            if (this.current().type !== TokenType.EOL) error(4); // ';' Check
+            else this.consume();
+            return statement;
+        } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) {
+            // Variable declaration
+            const type = this.consume();
+            const identifier = this.consume();
+            if (this.current().type === TokenType.EOL) { // Declaration without a value
+                this.consume(); // Consume the ';'
+                return { type, identifier, expression: { value: NULL } };
+            } else if (this.current().type === TokenType.EQUALS) {
+                this.consume(); // Consume the '='
+                const statement: INodeDeclare = { type, identifier, expression: this.parseExpression() };
+                if (this.current().type !== TokenType.EOL || statement.expression.value === NULL) error(4);
+                this.consume(); // Consume the ';'
+                return statement;
+            } else error(6);
+        } else if (this.current().type === TokenType.OPENCURLY) {
+            this.consume(); // Consume the '{'
+            const scope: INodeScope = { statements: [] };
+
+            // Parse the scope
+            while (this.current().type !== TokenType.CLOSECURLY) 
+                scope.statements.push(this.parseStatement());
+            
+            this.consume(); // Consume the '}'
+
+            return scope;
+        } else error(11, [this.current().type]);
+
+        return { returnExpr: { value: NULL } }; // Will never get executed
+    }
+
     parse(tokens: IToken[]): INodeProgram {
         this.index = 0;
         this.tokens = tokens;
 
         const programNode: INodeProgram = { statements: [] };
 
-        while (this.current().type !== TokenType.EOF) {
-            if (this.current().type === TokenType.RETURN) {
-                // Return statement
-                this.consume(); // Consume the return
-                const statement: INodeStatement = { returnExpr: this.parseExpression() };
-                programNode.statements.push(statement);
-                if (this.current().type !== TokenType.EOL) error(4); // ';' Check
-                else this.consume();
-            } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) {
-                // Variable declaration
-                const type = this.consume();
-                const identifier = this.consume();
-                if (this.current().type === TokenType.EOL) { // Declaration without a value
-                    this.consume(); // Consume the ';'
-                    programNode.statements.push({ type, identifier, expression: { value: NULL } });
-                } else if (this.current().type === TokenType.EQUALS) {
-                    this.consume(); // Consume the '='
-                    programNode.statements.push({ type, identifier, expression: this.parseExpression() });
-                    if (this.current().type !== TokenType.EOL) error(4);
-                    this.consume(); // Consume the ';'
-                } else error(6);
-            } else this.consume();
-        }
+        while (this.current().type !== TokenType.EOF)
+            programNode.statements.push(this.parseStatement());
 
         return programNode;
     }
@@ -137,7 +154,10 @@ interface INodeDeclare {
     expression: INodeExpr;
     type: IToken;
 }
-type INodeStatement = INodeReturn | INodeDeclare;
+interface INodeScope {
+    statements: INodeStatement[];
+}
+type INodeStatement = INodeReturn | INodeDeclare | INodeScope;
 export interface INodeProgram {
     statements: INodeStatement[];
 }

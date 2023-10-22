@@ -7,7 +7,7 @@
       },
       "identifier": {
         "type": "identifier",
-        "value": "a"
+        "value": "x"
       },
       "expression": {
         "value": {
@@ -37,80 +37,24 @@
       }
     },
     {
-      "type": {
-        "type": "type",
-        "value": "int"
-      },
-      "identifier": {
-        "type": "identifier",
-        "value": "b"
-      },
-      "expression": {
-        "value": {
-          "lhs": {
-            "value": {
-              "innerExpr": {
-                "value": {
-                  "lhs": {
-                    "value": {
-                      "type": "LInt",
-                      "value": 10
-                    }
-                  },
-                  "rhs": {
-                    "value": {
-                      "lhs": {
-                        "value": {
-                          "type": "LInt",
-                          "value": 3
-                        }
-                      },
-                      "rhs": {
-                        "value": {
-                          "type": "LInt",
-                          "value": 6
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+      "statements": [
+        {
+          "type": {
+            "type": "type",
+            "value": "int"
           },
-          "rhs": {
+          "identifier": {
+            "type": "identifier",
+            "value": "y"
+          },
+          "expression": {
             "value": {
               "type": "LInt",
-              "value": 2
+              "value": 69
             }
           }
         }
-      }
-    },
-    {
-      "type": {
-        "type": "type",
-        "value": "int"
-      },
-      "identifier": {
-        "type": "identifier",
-        "value": "x"
-      },
-      "expression": {
-        "value": {
-          "lhs": {
-            "value": {
-              "type": "identifier",
-              "value": "a"
-            }
-          },
-          "rhs": {
-            "value": {
-              "type": "identifier",
-              "value": "b"
-            }
-          }
-        }
-      }
+      ]
     },
     {
       "returnExpr": {

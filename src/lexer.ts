@@ -75,7 +75,7 @@ export class Lexer {
                 // Check if it's a keyword or a type
                 if (identifier === "return") token.type = TokenType.RETURN;
                 else if (identifier === "null") token.type = TokenType.NULL;
-                else if (types.includes(identifier)) token.type = TokenType.TYPE; 
+                else if (types.includes(identifier)) token.type = TokenType.TYPE;
                 tokens.push(token);
             } else if (this.current().match(/[0-9'"]/)) {
                 // Check for literals
@@ -97,13 +97,19 @@ export class Lexer {
                 tokens.push({ type: TokenType.STAR });
                 this.consume();
             } else if (this.current() === "/") {
-                tokens.push({ type: TokenType.SLASH });
+                tokens.push({ type: TokenType.FSLASH });
                 this.consume();
             } else if (this.current() === "(") {
                 tokens.push({ type: TokenType.OPENPAREN });
                 this.consume();
             } else if (this.current() === ")") {
                 tokens.push({ type: TokenType.CLOSEPAREN });
+                this.consume();
+            } else if (this.current() === "{") {
+                tokens.push({ type: TokenType.OPENCURLY });
+                this.consume();
+            } else if (this.current() === "}") {
+                tokens.push({ type: TokenType.CLOSECURLY });
                 this.consume();
             } else error(10, [this.consume()]);
         }
@@ -115,16 +121,18 @@ export class Lexer {
 
 export enum TokenType {
     IDENTIFIER = "identifier",
-    EQUALS = "equals", 
-    PLUS = "plus", 
-    MINUS = "minus", 
-    STAR = "star", 
-    SLASH = "slash", 
-    OPENPAREN = "openparen", 
-    CLOSEPAREN = "closeparen", 
+    EQUALS = "equals",
+    PLUS = "plus",
+    MINUS = "minus",
+    STAR = "star",
+    FSLASH = "slash",
+    OPENPAREN = "openparen",
+    CLOSEPAREN = "closeparen",
+    OPENCURLY = "opencurly", 
+    CLOSECURLY = "closecurly", 
     TYPE = "type",
     RETURN = "return",
-    NULL = "null", 
+    NULL = "null",
     EOL = "EOL",
     EOF = "EOF",
 }
@@ -165,7 +173,7 @@ export const NULL: IToken = { type: TokenType.NULL };
 export const getBinPrec = (binOp: TokenType | Literal): number | null => {
     switch (binOp) {
         case TokenType.STAR:
-        case TokenType.SLASH: return 1;
+        case TokenType.FSLASH: return 1;
         case TokenType.PLUS:
         case TokenType.MINUS: return 0;
         default: return null;
