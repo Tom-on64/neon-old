@@ -12,8 +12,8 @@
         - [x] Return
         - [x] Var Declare
         - [ ] Func Declare
-        - [ ] If/else
-          - [ ] Logic
+        - [x] If/else
+          - [x] Condition expr
           - [x] Scopes
         - [ ] Loops
           - [ ] For

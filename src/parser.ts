@@ -12,12 +12,17 @@ export class Parser {
     }
 
     private peek(amount = 1): IToken {
-        if (amount > this.tokens.length - this.index) error(5);
+        if (amount > this.tokens.length - this.index) error(6);
         return this.tokens[this.index + amount]
     }
 
     private current(): IToken {
         return this.tokens[this.index];
+    }
+
+    private tryConsume(type: TokenType) {
+        if (this.current().type === type) this.consume();
+        else error(5, [type]);
     }
 
     private parseTerm(): INodeTerm {
@@ -28,8 +33,7 @@ export class Parser {
         else if (this.current().type === TokenType.OPENPAREN) {
             this.consume() // Consume the '('
             const paren: INodeParen = { innerExpr: this.parseExpression() };
-            if (this.current().type !== TokenType.CLOSEPAREN) error(9);
-            this.consume() // Consume the ')'
+            this.tryConsume(TokenType.CLOSEPAREN);
             return paren;
         } else return NULL;
     }
@@ -49,7 +53,7 @@ export class Parser {
             const next_min_prec = prec + 1;
             const term_rhs = this.parseExpression(next_min_prec);
 
-            if (term_rhs.value === NULL) error(3);
+            if (term_rhs.value === NULL) error(4);
 
             if (op.type === TokenType.PLUS) {
                 const add: INodeBinAdd = { lhs: { value: term_lhs.value }, rhs: term_rhs };
@@ -71,42 +75,76 @@ export class Parser {
         return term_lhs;
     }
 
+    private parseScope(): INodeScope {
+        this.consume(); // Consume the '{'
+        const scope: INodeScope = { statements: [] };
+
+        // Parse the scope
+        while (this.current().type !== TokenType.CLOSECURLY)
+            scope.statements.push(this.parseStatement());
+
+        this.consume(); // Consume the '}'
+
+        return scope;
+    }
+
+    private parseIf(): INodeIf {
+        this.consume(); // Consume the 'if';
+        this.tryConsume(TokenType.OPENPAREN);
+
+        const expr = this.parseExpression();
+        this.tryConsume(TokenType.CLOSEPAREN);
+        if (expr.value === NULL) error(9);
+
+        
+        if (this.current().type !== TokenType.OPENCURLY) {
+            const stmt = this.parseStatement();
+            return { conditionExpr: expr, scope: { statements: [stmt] } };
+        }
+        const scope = this.parseScope();
+
+        if (this.current().type === TokenType.ELSE) {
+            this.consume(); // Consume the 'else'
+            let elseScope: INodeScope;
+            if (this.current().type !== TokenType.OPENCURLY) {
+                const stmt = this.parseStatement();
+                elseScope = { statements: [stmt] };
+            } else elseScope = this.parseScope();
+
+            return { conditionExpr: expr, scope, else: elseScope };
+        }
+
+        return { conditionExpr: expr, scope };
+    }
+
+    private parseDeclaration(): INodeDeclare {
+        const type = this.consume();
+        const identifier = this.consume();
+        if (this.current().type === TokenType.EOL) { // Declaration without a value
+            this.consume(); // Consume the ';'
+            return { type, identifier, expression: { value: NULL } };
+        } else if (this.current().type === TokenType.EQUALS) {
+            this.consume(); // Consume the '='
+            const statement: INodeDeclare = { type, identifier, expression: this.parseExpression() };
+            this.tryConsume(TokenType.EOL);
+            if (statement.expression.value === NULL) error(9);
+            return statement;
+        } else return error(6);
+    }
+
     private parseStatement(): INodeStatement {
         if (this.current().type === TokenType.RETURN) {
-            // Return statement
             this.consume(); // Consume the return
             const statement: INodeReturn = { returnExpr: this.parseExpression() };
-            if (this.current().type !== TokenType.EOL) error(4); // ';' Check
-            else this.consume();
+            this.tryConsume(TokenType.EOL);
             return statement;
-        } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) {
-            // Variable declaration
-            const type = this.consume();
-            const identifier = this.consume();
-            if (this.current().type === TokenType.EOL) { // Declaration without a value
-                this.consume(); // Consume the ';'
-                return { type, identifier, expression: { value: NULL } };
-            } else if (this.current().type === TokenType.EQUALS) {
-                this.consume(); // Consume the '='
-                const statement: INodeDeclare = { type, identifier, expression: this.parseExpression() };
-                if (this.current().type !== TokenType.EOL || statement.expression.value === NULL) error(4);
-                this.consume(); // Consume the ';'
-                return statement;
-            } else error(6);
-        } else if (this.current().type === TokenType.OPENCURLY) {
-            this.consume(); // Consume the '{'
-            const scope: INodeScope = { statements: [] };
-
-            // Parse the scope
-            while (this.current().type !== TokenType.CLOSECURLY) 
-                scope.statements.push(this.parseStatement());
-            
-            this.consume(); // Consume the '}'
-
-            return scope;
-        } else error(11, [this.current().type]);
-
-        return { returnExpr: { value: NULL } }; // Will never get executed
+        } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) 
+            return this.parseDeclaration();
+        else if (this.current().type === TokenType.OPENCURLY) 
+            return this.parseScope();
+        else if (this.current().type === TokenType.IF) 
+            return this.parseIf();
+        else return error(7, [this.current().type]);
     }
 
     parse(tokens: IToken[]): INodeProgram {
@@ -122,42 +160,47 @@ export class Parser {
     }
 }
 
-interface INodeExpr {
+export interface INodeExpr {
     value: INodeTerm | INodeBinExpr;
 }
-interface INodeParen {
-    innerExpr: INodeExpr
+export interface INodeParen {
+    innerExpr: INodeExpr;
 }
-type INodeTerm = IToken | INodeParen;
-interface INodeBinAdd {
+export type INodeTerm = IToken | INodeParen;
+export interface INodeBinAdd {
     lhs: INodeExpr;
     rhs: INodeExpr;
 }
-interface INodeBinSub {
+export interface INodeBinSub {
     lhs: INodeExpr;
     rhs: INodeExpr;
 }
-interface INodeBinMult {
+export interface INodeBinMult {
     lhs: INodeExpr;
     rhs: INodeExpr;
 }
-interface INodeBinDiv {
+export interface INodeBinDiv {
     lhs: INodeExpr;
     rhs: INodeExpr;
 }
-type INodeBinExpr = INodeBinAdd | INodeBinSub | INodeBinMult | INodeBinDiv;
-interface INodeReturn {
+export type INodeBinExpr = INodeBinAdd | INodeBinSub | INodeBinMult | INodeBinDiv;
+export interface INodeIf {
+    conditionExpr: INodeExpr;
+    scope: INodeScope;
+    else?: INodeScope;
+}
+export interface INodeReturn {
     returnExpr: INodeExpr;
 }
-interface INodeDeclare {
+export interface INodeDeclare {
     identifier: IToken;
     expression: INodeExpr;
     type: IToken;
 }
-interface INodeScope {
+export interface INodeScope {
     statements: INodeStatement[];
 }
-type INodeStatement = INodeReturn | INodeDeclare | INodeScope;
+export type INodeStatement = INodeReturn | INodeDeclare | INodeScope | INodeIf;
 export interface INodeProgram {
     statements: INodeStatement[];
 }

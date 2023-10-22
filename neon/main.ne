@@ -1,7 +1,6 @@
-int x = 1 + 2 * 3;
+int x = 5;
 
-{
-    int y = 69;
-}
-
-return x;
+if (x) {
+    int y = x + 1;
+    return y;
+} else return 0;

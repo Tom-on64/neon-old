@@ -3,10 +3,11 @@
 program = statement*; (* Root Node*)
 
 (* Nodes *)
-statement = return | declaration | ("{" statement* "}");
-
+statement = return | declaration | scope | if;
 declaration = type identifier "=" expression;
 return = "return" expr;
+scope = ("{" statement* "}");
+if = "if" "(" expr ")" (scope|statement) ("else" (scope|statement))?;
 
 expression = term | binExpressions;
 term = intLit | identifier | "(" expr ")";

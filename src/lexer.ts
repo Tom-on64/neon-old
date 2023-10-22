@@ -6,14 +6,17 @@ export class Lexer {
 
     private consume(amount = 1): string {
         this.index += amount;
+        if (this.index > this.input.length) error(10);
         return this.input[this.index - amount];
     }
 
-    private peek(amount = 1): string {
-        return this.input[this.index + amount];
-    }
+    //! Unused
+    // private peek(amount = 1): string {
+    //     return this.input[this.index + amount];
+    // }
 
     private current(): string {
+        if (this.index >= this.input.length) error(10);
         return this.input[this.index];
     }
 
@@ -74,6 +77,8 @@ export class Lexer {
 
                 // Check if it's a keyword or a type
                 if (identifier === "return") token.type = TokenType.RETURN;
+                else if (identifier === "if") token.type = TokenType.IF;
+                else if (identifier === "else") token.type = TokenType.ELSE;
                 else if (identifier === "null") token.type = TokenType.NULL;
                 else if (types.includes(identifier)) token.type = TokenType.TYPE;
                 tokens.push(token);
@@ -111,7 +116,7 @@ export class Lexer {
             } else if (this.current() === "}") {
                 tokens.push({ type: TokenType.CLOSECURLY });
                 this.consume();
-            } else error(10, [this.consume()]);
+            } else error(3, [this.consume()]);
         }
         tokens.push({ type: TokenType.EOF })
 
@@ -121,6 +126,12 @@ export class Lexer {
 
 export enum TokenType {
     IDENTIFIER = "identifier",
+    // Keywords
+    RETURN = "return",
+    IF = "if",
+    ELSE = "else",
+    NULL = "null",
+    // Special chars
     EQUALS = "equals",
     PLUS = "plus",
     MINUS = "minus",
@@ -128,11 +139,10 @@ export enum TokenType {
     FSLASH = "slash",
     OPENPAREN = "openparen",
     CLOSEPAREN = "closeparen",
-    OPENCURLY = "opencurly", 
-    CLOSECURLY = "closecurly", 
+    OPENCURLY = "opencurly",
+    CLOSECURLY = "closecurly",
+    // Other
     TYPE = "type",
-    RETURN = "return",
-    NULL = "null",
     EOL = "EOL",
     EOF = "EOF",
 }

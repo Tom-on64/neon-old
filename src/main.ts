@@ -13,4 +13,4 @@ const ast = parser.parse(tokens);
 console.log(JSON.stringify(ast, undefined, 2));
 const program = generator.generate(ast);
 
-Deno.writeTextFileSync("neon/out.nex", program);
+Deno.writeTextFileSync("neon/out.json", program);
