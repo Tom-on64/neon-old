@@ -39,10 +39,10 @@ export class Parser {
     }
 
     private parseExpression(min_prec = 0): INodeExpr {
-        const term_lhs: INodeExpr = { value: this.parseTerm() };
-        if (term_lhs.value === NULL) return { value: NULL };
+        const term_lhs: INodeExpr = { value: this.parseTerm(), _type: "expr" };
+        if (term_lhs.value === NULL) return NullExpr;
 
-        const expr: INodeExpr = { value: NULL };
+        const expr: INodeExpr = NullExpr;
 
         while (true) {
             const op = this.current();
@@ -56,16 +56,16 @@ export class Parser {
             if (term_rhs.value === NULL) error(4);
 
             if (op.type === TokenType.PLUS) {
-                const add: INodeBinAdd = { lhs: { value: term_lhs.value }, rhs: term_rhs, _type: "add" };
+                const add: INodeBinAdd = { lhs: { value: term_lhs.value, _type: "expr" }, rhs: term_rhs, _type: "add" };
                 expr.value = add;
             } else if (op.type === TokenType.MINUS) {
-                const mult: INodeBinSub = { lhs: { value: term_lhs.value }, rhs: term_rhs, _type: "sub" };
+                const mult: INodeBinSub = { lhs: { value: term_lhs.value, _type: "expr" }, rhs: term_rhs, _type: "sub" };
                 expr.value = mult;
             } else if (op.type === TokenType.STAR) {
-                const mult: INodeBinMult = { lhs: { value: term_lhs.value }, rhs: term_rhs, _type: "mult" };
+                const mult: INodeBinMult = { lhs: { value: term_lhs.value, _type: "expr" }, rhs: term_rhs, _type: "mult" };
                 expr.value = mult;
             } else if (op.type === TokenType.FSLASH) {
-                const mult: INodeBinDiv = { lhs: { value: term_lhs.value }, rhs: term_rhs, _type: "div" };
+                const mult: INodeBinDiv = { lhs: { value: term_lhs.value, _type: "expr" }, rhs: term_rhs, _type: "div" };
                 expr.value = mult;
             } else error(8);
 
@@ -96,12 +96,11 @@ export class Parser {
         this.tryConsume(TokenType.CLOSEPAREN);
         if (expr.value === NULL) error(9);
 
-        
+        let scope: INodeScope;
         if (this.current().type !== TokenType.OPENCURLY) {
             const stmt = this.parseStatement();
-            return { conditionExpr: expr, scope: { statements: [stmt], _type: "scope" }, _type: "if" };
-        }
-        const scope = this.parseScope();
+            scope = { statements: [stmt], _type: "scope" };
+        } else scope = this.parseScope();
 
         if (this.current().type === TokenType.ELSE) {
             this.consume(); // Consume the 'else'
@@ -122,7 +121,7 @@ export class Parser {
         const identifier = this.consume();
         if (this.current().type === TokenType.EOL) { // Declaration without a value
             this.consume(); // Consume the ';'
-            return { type, identifier, expression: { value: NULL }, _type: "declare" };
+            return { type, identifier, expression: NullExpr, _type: "declare" };
         } else if (this.current().type === TokenType.EQUALS) {
             this.consume(); // Consume the '='
             const statement: INodeDeclare = { type, identifier, expression: this.parseExpression(), _type: "declare" };
@@ -151,7 +150,7 @@ export class Parser {
         this.index = 0;
         this.tokens = tokens;
 
-        const programNode: INodeProgram = { statements: [] };
+        const programNode: INodeProgram = { statements: [], _type: "program" };
 
         while (this.current().type !== TokenType.EOF)
             programNode.statements.push(this.parseStatement());
@@ -161,6 +160,7 @@ export class Parser {
 }
 
 export interface INodeExpr {
+    _type: "expr", 
     value: INodeTerm | INodeBinExpr;
 }
 export interface INodeParen {
@@ -211,5 +211,8 @@ export interface INodeScope {
 }
 export type INodeStatement = INodeReturn | INodeDeclare | INodeScope | INodeIf;
 export interface INodeProgram {
+    _type: "program";
     statements: INodeStatement[];
 }
+
+const NullExpr: INodeExpr = { value: NULL, _type: "expr" };

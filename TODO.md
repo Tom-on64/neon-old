@@ -22,7 +22,7 @@
         - [x] Variables
         - [ ] Func Calls
         - [ ] Logic expressions
-          - [ ] Define what is True and False
+          - [x] Define what is True and False
           - [ ] And / Or / Not
         - [x] Operations
           - [x] Addition / Subtraction
@@ -31,11 +31,13 @@
           - [x] Operator precidence
       - [ ] Pain
     - [ ] Generator
-      - [ ] Translate code into objects
+      - [x] Code -> asm
+      - [ ] asm -> neon object
     - [ ] Linker
       - [ ] Link objects into .nex
     - [ ] Runner? (maybe)
     - [x] Error handling
+  - [ ] Write docs 
 - [ ] Neon V0.2.0
   - [ ] More types
     - [ ] String

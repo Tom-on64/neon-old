@@ -28,12 +28,12 @@ export class Lexer {
             while (this.current() != quote) string += this.consume();
             this.consume(); // Consume end quote
 
-            return { type: Literal.STRING, value: string };
+            return { type: Literal.STRING, value: string, _type: "token" };
         } else {
             const char = this.consume();
             if (this.current() != quote) error(1);
             this.consume(); // Consume the other quote
-            return { type: Literal.CHAR, value: char };
+            return { type: Literal.CHAR, value: char, _type: "token" };
         }
     }
 
@@ -43,10 +43,10 @@ export class Lexer {
         while (this.current().match(/[0-9]/)) numString += this.consume();
 
         if (this.current() != "." && this.current() != "f")
-            return { type: Literal.INT, value: parseInt(numString) };
+            return { type: Literal.INT, value: parseInt(numString), _type: "token" };
         else if (this.current() == "f") {
             this.consume();
-            return { type: Literal.FLOAT, value: parseFloat(numString) };
+            return { type: Literal.FLOAT, value: parseFloat(numString), _type: "token" };
         }
 
         numString += this.consume(); // Consume period
@@ -54,7 +54,7 @@ export class Lexer {
         if (this.current() != "f") error(2);
         this.consume() // Consume 'f'
 
-        return { type: Literal.FLOAT, value: parseFloat(numString) };
+        return { type: Literal.FLOAT, value: parseFloat(numString), _type: "token" };
     }
 
     tokenize(file: string): IToken[] {
@@ -73,7 +73,7 @@ export class Lexer {
                 // Get an identifier
                 let identifier = this.consume();
                 while (this.current().match(/[A-Za-z0-9_]/)) identifier += this.consume();
-                const token = { type: TokenType.IDENTIFIER, value: identifier };
+                const token: IToken = { type: TokenType.IDENTIFIER, value: identifier, _type: "token" };
 
                 // Check if it's a keyword or a type
                 if (identifier === "return") token.type = TokenType.RETURN;
@@ -87,38 +87,38 @@ export class Lexer {
                 if (this.current().match(/('|")/)) tokens.push(this.parseString()); // String
                 else tokens.push(this.parseNumber()); // Number
             } else if (this.current() === "=") {
-                tokens.push({ type: TokenType.EQUALS });
+                tokens.push({ type: TokenType.EQUALS, _type: "token" });
                 this.consume();
             } else if (this.current() === ";") {
-                tokens.push({ type: TokenType.EOL });
+                tokens.push({ type: TokenType.EOL, _type: "token" });
                 this.consume();
             } else if (this.current() === "+") {
-                tokens.push({ type: TokenType.PLUS });
+                tokens.push({ type: TokenType.PLUS, _type: "token" });
                 this.consume();
             } else if (this.current() === "-") {
-                tokens.push({ type: TokenType.MINUS });
+                tokens.push({ type: TokenType.MINUS, _type: "token" });
                 this.consume();
             } else if (this.current() === "*") {
-                tokens.push({ type: TokenType.STAR });
+                tokens.push({ type: TokenType.STAR, _type: "token" });
                 this.consume();
             } else if (this.current() === "/") {
-                tokens.push({ type: TokenType.FSLASH });
+                tokens.push({ type: TokenType.FSLASH, _type: "token" });
                 this.consume();
             } else if (this.current() === "(") {
-                tokens.push({ type: TokenType.OPENPAREN });
+                tokens.push({ type: TokenType.OPENPAREN, _type: "token" });
                 this.consume();
             } else if (this.current() === ")") {
-                tokens.push({ type: TokenType.CLOSEPAREN });
+                tokens.push({ type: TokenType.CLOSEPAREN, _type: "token" });
                 this.consume();
             } else if (this.current() === "{") {
-                tokens.push({ type: TokenType.OPENCURLY });
+                tokens.push({ type: TokenType.OPENCURLY, _type: "token" });
                 this.consume();
             } else if (this.current() === "}") {
-                tokens.push({ type: TokenType.CLOSECURLY });
+                tokens.push({ type: TokenType.CLOSECURLY, _type: "token" });
                 this.consume();
             } else error(3, [this.consume()]);
         }
-        tokens.push({ type: TokenType.EOF })
+        tokens.push({ type: TokenType.EOF, _type: "token" })
 
         return tokens;
     }
@@ -174,11 +174,12 @@ const types = [
 ]
 
 export interface IToken {
+    _type: "token";
     type: TokenType | Literal;
     value?: string | number | boolean;
 }
 
-export const NULL: IToken = { type: TokenType.NULL };
+export const NULL: IToken = { type: TokenType.NULL, _type: "token" };
 
 export const getBinPrec = (binOp: TokenType | Literal): number | null => {
     switch (binOp) {
