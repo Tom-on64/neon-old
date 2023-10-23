@@ -8,7 +8,7 @@ export const error = (code = 0, args: string[] = []): never => {
 }
 
 const errors = [
-    "Unknown Error.", // 0
+    "%0", // 0
     "[LEX] Expected single character, but got more.", // 1
     "[LEX] Expected 'f' after float literal.", // 2
     "[LEX] Invalid character '%0'.", // 3
