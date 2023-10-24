@@ -3,8 +3,9 @@
 program = statement*; (* Root Node*)
 
 (* Nodes *)
-statement = return | declaration | scope | if;
+statement = return | declaration | assignment | scope | if;
 declaration = type identifier "=" expression;
+assignment = identifier "=" expression;
 return = "return" expr;
 scope = ("{" statement* "}");
 if = "if" "(" expr ")" (scope|statement) ("else" (scope|statement))?;

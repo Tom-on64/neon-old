@@ -1,6 +1,6 @@
 import { error } from "./error.ts";
 import { Literal, TokenType } from "./lexer.ts";
-import { INodeBinExpr, INodeExpr, INodeProgram, INodeScope, INodeStatement, INodeTerm } from "./parser.ts";
+import { INodeAssign, INodeBinExpr, INodeExpr, INodeProgram, INodeScope, INodeStatement, INodeTerm } from "./parser.ts";
 
 export class Generator {
     private output = "";
@@ -44,6 +44,19 @@ export class Generator {
         this.endScope();
     }
 
+    private genAssign(assign: INodeAssign) {
+        this.genExpression(assign.expression);
+        this.pop("rax");
+        if (!assign.identifier.value || typeof (assign.identifier.value) !== "string") return error(0, ["you fucked up"]);
+        const _var = this.getVar(assign.identifier.value);
+        if (!_var) return error(0, ["Assignment to undefined variable."])
+        const offset = this.stackSize - _var.stackLoc;
+        this.output += `    add rsp, ${offset * 8}\n`;
+        this.push("rax");
+        this.output += `    sub rsp, ${(offset - 1) * 8}\n`
+        this.stackSize--;
+    }
+
     private genStatement(stmt: INodeStatement) {
         if (stmt._type == "return") {
             this.genExpression(stmt.returnExpr);
@@ -73,7 +86,7 @@ export class Generator {
                 this.genScope(stmt.else);
                 this.output += `${endLabel}:\n`;
             }
-        }
+        } else if (stmt._type === "assign") this.genAssign(stmt);
     }
 
     generate(root: INodeProgram): string {

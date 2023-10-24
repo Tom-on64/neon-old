@@ -126,9 +126,18 @@ export class Parser {
             this.consume(); // Consume the '='
             const statement: INodeDeclare = { type, identifier, expression: this.parseExpression(), _type: "declare" };
             this.tryConsume(TokenType.EOL);
-            if (statement.expression.value === NULL) error(9);
+            if (statement.expression === NullExpr) error(9);
             return statement;
         } else return error(6);
+    }
+
+    private parseAssignment(): INodeAssign {
+        const identifier = this.consume();
+        this.tryConsume(TokenType.EQUALS);
+        const expression = this.parseExpression();
+        if (expression === NullExpr) error(9);
+        this.tryConsume(TokenType.EOL);
+        return { identifier, expression, _type: "assign" };
     }
 
     private parseStatement(): INodeStatement {
@@ -139,6 +148,8 @@ export class Parser {
             return statement;
         } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) 
             return this.parseDeclaration();
+        else if (this.current().type === TokenType.IDENTIFIER && this.peek().type === TokenType.EQUALS) 
+            return this.parseAssignment(); 
         else if (this.current().type === TokenType.OPENCURLY) 
             return this.parseScope();
         else if (this.current().type === TokenType.IF) 
@@ -205,11 +216,16 @@ export interface INodeDeclare {
     expression: INodeExpr;
     type: IToken;
 }
+export interface INodeAssign {
+    _type: "assign";
+    identifier: IToken;
+    expression: INodeExpr;
+}
 export interface INodeScope {
     _type: "scope";
     statements: INodeStatement[];
 }
-export type INodeStatement = INodeReturn | INodeDeclare | INodeScope | INodeIf;
+export type INodeStatement = INodeReturn | INodeDeclare | INodeAssign | INodeScope | INodeIf;
 export interface INodeProgram {
     _type: "program";
     statements: INodeStatement[];

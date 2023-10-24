@@ -9,7 +9,7 @@
     "lin": "lib"
   },
   "scripts": {
-    "test": "deno run --allow-read --allow-write ./src/main.ts", 
+    "test": "deno run --allow-read --allow-write ./src/main.ts ./testing/main.ne -o ./testing/out.asm", 
     "build": "deno compile --output ./build/neon ./src/main.ts"
   },
   "repository": {

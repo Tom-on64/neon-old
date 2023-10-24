@@ -4,8 +4,7 @@ export const error = (code = 0, args: string[] = []): never => {
     args.forEach((arg, i) => {err = err.replaceAll(`%${i}`, arg)});
 
     console.error(`\u001b[31mError: ${err ? err : "Unknown Error"}    \u001b[1m\u001b[90mNE${code}\u001b[0m`);
-    if (code === 0) return Deno.exit(-1);
-    return Deno.exit(code);
+    return Deno.exit(1);
 }
 
 const errors = [

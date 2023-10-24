@@ -11,6 +11,7 @@
       - [ ] Statements
         - [x] Return
         - [x] Var Declare
+        - [x] Var Reassign
         - [ ] Func Declare
         - [x] If/else
           - [x] Condition expr
@@ -30,12 +31,8 @@
           - [x] Parenthesis
           - [x] Operator precidence
       - [ ] Pain
-    - [ ] Generator
+    - [x] Generator
       - [x] Code -> asm
-      - [ ] asm -> neon object
-    - [ ] Linker
-      - [ ] Link objects into .nex
-    - [ ] Runner? (maybe)
     - [x] Error handling
   - [ ] Write docs 
 - [ ] Neon V0.2.0
@@ -47,10 +44,7 @@
   - [ ] Exponentiatiation
 - [ ] Neon V0.3.0
   - [ ] Importing
-  - [ ] STD Lib
-    - [ ] Base
-      - [ ] IO
-      - [ ] Math
+  - [ ] STD Lib (OS dependent things like syscalls)
 - [ ] Neon V0.4.0
   - [ ] OOP features
     - [ ] class
@@ -62,6 +56,10 @@
     - [ ] struct
     - [ ] enum
 - [ ] Neon V0.5.0
+  - [ ] Define .nex
+    - [ ] Assemble into .nex
+    - [ ] Link .nex
+    - [ ] .nex runner
   - [ ] User defined types
   - [ ] More std lib stuff
 - [ ] Neon V0.6.0
