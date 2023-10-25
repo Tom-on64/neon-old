@@ -18,7 +18,7 @@
           - [x] Scopes
         - [ ] Loops
           - [ ] For
-          - [ ] While
+          - [x] While
       - [ ] Expressions
         - [x] Variables
         - [ ] Func Calls
