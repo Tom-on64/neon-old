@@ -3,12 +3,13 @@
 program = statement*; (* Root Node*)
 
 (* Nodes *)
-statement = return | declaration | assignment | scope | if;
+statement = return | declaration | assignment | scope | if | while;
 declaration = type identifier "=" expression;
 assignment = identifier "=" expression;
 return = "return" expr;
 scope = ("{" statement* "}");
 if = "if" "(" expr ")" (scope|statement) ("else" (scope|statement))?;
+while = "while" "(" expr ")" (scope|statement);
 
 expression = term | binExpressions;
 term = intLit | identifier | "(" expr ")";

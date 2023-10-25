@@ -89,7 +89,7 @@ export class Parser {
     }
 
     private parseIf(): INodeIf {
-        this.consume(); // Consume the 'if';
+        this.tryConsume(TokenType.IF);
         this.tryConsume(TokenType.OPENPAREN);
 
         const expr = this.parseExpression();
@@ -114,6 +114,23 @@ export class Parser {
         }
 
         return { conditionExpr: expr, scope, _type: "if" };
+    }
+
+    private parseWhile(): INodeWhile {
+        this.tryConsume(TokenType.WHILE);
+        this.tryConsume(TokenType.OPENPAREN);
+
+        const expr = this.parseExpression();
+        this.tryConsume(TokenType.CLOSEPAREN);
+        if (expr.value === NULL) error(9);
+
+        let scope: INodeScope;
+        if (this.current().type !== TokenType.OPENCURLY) {
+            const stmt = this.parseStatement();
+            scope = { statements: [stmt], _type: "scope" };
+        } else scope = this.parseScope();
+
+        return { conditionExpr: expr, scope, _type: "while" };
     }
 
     private parseDeclaration(): INodeDeclare {
@@ -150,10 +167,9 @@ export class Parser {
             return this.parseDeclaration();
         else if (this.current().type === TokenType.IDENTIFIER && this.peek().type === TokenType.EQUALS) 
             return this.parseAssignment(); 
-        else if (this.current().type === TokenType.OPENCURLY) 
-            return this.parseScope();
-        else if (this.current().type === TokenType.IF) 
-            return this.parseIf();
+        else if (this.current().type === TokenType.OPENCURLY) return this.parseScope();
+        else if (this.current().type === TokenType.IF) return this.parseIf();
+        else if (this.current().type === TokenType.WHILE) return this.parseWhile();
         else return error(7, [this.current().type]);
     }
 
@@ -206,6 +222,12 @@ export interface INodeIf {
     scope: INodeScope;
     else?: INodeScope;
 }
+
+export interface INodeWhile {
+    _type: "while";
+    conditionExpr: INodeExpr;
+    scope: INodeScope;
+}
 export interface INodeReturn {
     _type: "return";
     returnExpr: INodeExpr;
@@ -225,7 +247,7 @@ export interface INodeScope {
     _type: "scope";
     statements: INodeStatement[];
 }
-export type INodeStatement = INodeReturn | INodeDeclare | INodeAssign | INodeScope | INodeIf;
+export type INodeStatement = INodeReturn | INodeDeclare | INodeAssign | INodeScope | INodeIf | INodeWhile;
 export interface INodeProgram {
     _type: "program";
     statements: INodeStatement[];

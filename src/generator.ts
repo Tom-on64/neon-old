@@ -87,6 +87,18 @@ export class Generator {
                 this.output += `${endLabel}:\n`;
             }
         } else if (stmt._type === "assign") this.genAssign(stmt);
+        else if (stmt._type === "while") {
+            const beginLabel = this.createLabel();
+            const endLabel = this.createLabel();
+            this.output += `${beginLabel}:\n`;
+            this.genExpression(stmt.conditionExpr);
+            this.pop("rax");
+            this.output += "    test rax, rax\n";
+            this.output += `    jz ${endLabel}\n`;
+            this.genScope(stmt.scope);
+            this.output += `    jmp ${beginLabel}\n`;
+            this.output += `${endLabel}:\n`
+        }
     }
 
     generate(root: INodeProgram): string {

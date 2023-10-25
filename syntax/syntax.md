@@ -44,19 +44,15 @@ return b; // This will throw an error
 ```
 
 ## If statements
-
-
-| Expression   | Value |
-| ------------ | ----- |
-| false        | False |
-| true         | True  |
-| 0            | False |
-| Other than 0 | True  |
-| null         | False  |
+In conditions, 0 is false and anything else is true.
 
 Syntax: `if (<condition>) <scope>`
 
 Example:
 ```neon
-if (1) {}
+int x = 2;
+
+if (x) {
+    // some code
+} else return 1;
 ```

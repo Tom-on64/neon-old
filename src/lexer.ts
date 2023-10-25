@@ -79,6 +79,7 @@ export class Lexer {
                 if (identifier === "return") token.type = TokenType.RETURN;
                 else if (identifier === "if") token.type = TokenType.IF;
                 else if (identifier === "else") token.type = TokenType.ELSE;
+                else if (identifier === "while") token.type = TokenType.WHILE;
                 else if (identifier === "null") token.type = TokenType.NULL;
                 else if (types.includes(identifier)) token.type = TokenType.TYPE;
                 tokens.push(token);
@@ -130,6 +131,7 @@ export enum TokenType {
     RETURN = "return",
     IF = "if",
     ELSE = "else",
+    WHILE = "while", 
     NULL = "null",
     // Special chars
     EQUALS = "equals",
