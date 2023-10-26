@@ -10,10 +10,9 @@ export class Lexer {
         return this.input[this.index - amount];
     }
 
-    //! Unused
-    // private peek(amount = 1): string {
-    //     return this.input[this.index + amount];
-    // }
+    private peek(amount = 1): string {
+        return this.input[this.index + amount];
+    }
 
     private current(): string {
         if (this.index >= this.input.length) error(10);
@@ -94,14 +93,29 @@ export class Lexer {
                 tokens.push({ type: TokenType.EOL, _type: "token" });
                 this.consume();
             } else if (this.current() === "+") {
-                tokens.push({ type: TokenType.PLUS, _type: "token" });
-                this.consume();
+                if (this.peek() === "+") {
+                    tokens.push({ type: TokenType.DPLUS, _type: "token" })
+                    this.consume(2);
+                } else {
+                    tokens.push({ type: TokenType.PLUS, _type: "token" });
+                    this.consume();
+                }
             } else if (this.current() === "-") {
-                tokens.push({ type: TokenType.MINUS, _type: "token" });
-                this.consume();
+                if (this.peek() === "-") {
+                    tokens.push({ type: TokenType.DMINUS, _type: "token" })
+                    this.consume(2);
+                } else {
+                    tokens.push({ type: TokenType.MINUS, _type: "token" });
+                    this.consume();
+                }
             } else if (this.current() === "*") {
-                tokens.push({ type: TokenType.STAR, _type: "token" });
-                this.consume();
+                if (this.peek() === "*") {
+                    tokens.push({ type: TokenType.DSTAR, _type: "token" })
+                    this.consume(2);
+                } else {
+                    tokens.push({ type: TokenType.STAR, _type: "token" });
+                    this.consume();
+                }
             } else if (this.current() === "/") {
                 tokens.push({ type: TokenType.FSLASH, _type: "token" });
                 this.consume();
@@ -131,13 +145,16 @@ export enum TokenType {
     RETURN = "return",
     IF = "if",
     ELSE = "else",
-    WHILE = "while", 
+    WHILE = "while",
     NULL = "null",
     // Special chars
     EQUALS = "equals",
     PLUS = "plus",
+    DPLUS = "dplus",
     MINUS = "minus",
+    DMINUS = "dminus",
     STAR = "star",
+    DSTAR = "dstar",
     FSLASH = "slash",
     OPENPAREN = "openparen",
     CLOSEPAREN = "closeparen",

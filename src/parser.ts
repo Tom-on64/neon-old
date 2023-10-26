@@ -150,9 +150,29 @@ export class Parser {
 
     private parseAssignment(): INodeAssign {
         const identifier = this.consume();
-        this.tryConsume(TokenType.EQUALS);
-        const expression = this.parseExpression();
-        if (expression === NullExpr) error(9);
+        const op = this.consume();
+        let expression: INodeExpr;
+        if (op.type === TokenType.EQUALS) {
+            expression = this.parseExpression();
+            if (expression === NullExpr) error(9);
+        } else if (op.type === TokenType.DPLUS) expression = {
+            value: {
+                lhs: { value: identifier, _type: "expr" },
+                rhs: { value: { type: Literal.INT, value: 1, _type: "token" }, _type: "expr" },
+                _type: "add"
+            },
+            _type: "expr"
+        };
+        else if (op.type === TokenType.DMINUS) expression = {
+            value: {
+                lhs: { value: identifier, _type: "expr" },
+                rhs: { value: { type: Literal.INT, value: 1, _type: "token" }, _type: "expr" },
+                _type: "sub"
+            },
+            _type: "expr"
+        };
+        else return error(0, ["You fucked up"]);
+
         this.tryConsume(TokenType.EOL);
         return { identifier, expression, _type: "assign" };
     }
@@ -163,10 +183,10 @@ export class Parser {
             const statement: INodeReturn = { returnExpr: this.parseExpression(), _type: "return" };
             this.tryConsume(TokenType.EOL);
             return statement;
-        } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER) 
+        } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER)
             return this.parseDeclaration();
-        else if (this.current().type === TokenType.IDENTIFIER && this.peek().type === TokenType.EQUALS) 
-            return this.parseAssignment(); 
+        else if (this.current().type === TokenType.IDENTIFIER && (this.peek().type === TokenType.EQUALS || this.peek().type === TokenType.DPLUS || this.peek().type === TokenType.DMINUS))
+            return this.parseAssignment();
         else if (this.current().type === TokenType.OPENCURLY) return this.parseScope();
         else if (this.current().type === TokenType.IF) return this.parseIf();
         else if (this.current().type === TokenType.WHILE) return this.parseWhile();
@@ -187,7 +207,7 @@ export class Parser {
 }
 
 export interface INodeExpr {
-    _type: "expr", 
+    _type: "expr",
     value: INodeTerm | INodeBinExpr;
 }
 export interface INodeParen {

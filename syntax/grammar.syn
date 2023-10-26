@@ -5,7 +5,7 @@ program = statement*; (* Root Node*)
 (* Nodes *)
 statement = return | declaration | assignment | scope | if | while;
 declaration = type identifier "=" expression;
-assignment = identifier "=" expression;
+assignment = (identifier ("="|"+="|"-=") expression)|(identifier("++"|"--"));
 return = "return" expr;
 scope = ("{" statement* "}");
 if = "if" "(" expr ")" (scope|statement) ("else" (scope|statement))?;

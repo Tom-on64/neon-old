@@ -13,7 +13,7 @@ const errors = [
     "[LEX] Expected 'f' after float literal.", // 2
     "[LEX] Invalid character '%0'.", // 3
     "[AST] Unable to parse expression.", // 4
-    "[AST] Expected '%0'.", // 5
+    "[AST] Expected %0.", // 5
     "[AST] Peek out of range.", // 6
     "[AST] Expected statement, but got %0.", // 7
     "[AST] Unknown operator.", // 8

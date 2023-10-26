@@ -7,7 +7,8 @@ Neon works by compiling into Neon Executables (.nex), which can be ran by the Ne
 
 ## Current state
 You can check on the current grammar [here](syntax/grammar.syn) (I'll try to keep updating it) \
-Currently outputs nasm assembly
+Currently outputs nasm assembly \
+Also uses mac syscalls so you'll need to change the in [stdlib.json](src/stdlib.json)
 
 ### Check out the [TODO List](TODO.md)
 ### You can see the [Change Log](CHANGELOG.md)

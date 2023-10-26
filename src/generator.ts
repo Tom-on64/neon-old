@@ -1,6 +1,7 @@
 import { error } from "./error.ts";
 import { Literal, TokenType } from "./lexer.ts";
 import { INodeAssign, INodeBinExpr, INodeExpr, INodeProgram, INodeScope, INodeStatement, INodeTerm } from "./parser.ts";
+import stdlib from "./stdlib.json" assert { type: "json" };
 
 export class Generator {
     private output = "";
@@ -60,7 +61,7 @@ export class Generator {
     private genStatement(stmt: INodeStatement) {
         if (stmt._type == "return") {
             this.genExpression(stmt.returnExpr);
-            this.output += "    mov rax, 0x02000001\n";
+            this.output += `    mov rax, ${stdlib.syscall.return}\n`;
             this.pop("rdi");
             this.output += "    syscall\n";
         } else if (stmt._type == "declare") {
@@ -107,7 +108,7 @@ export class Generator {
         root.statements.forEach(stmt => this.genStatement(stmt));
 
         this.output += ".exit:\n"
-        this.output += "    mov rax, 0x02000001\n";
+        this.output += `    mov rax, ${stdlib.syscall.return}\n`;
         this.output += "    mov rdi, 0\n";
         this.output += "    syscall\n";
 
