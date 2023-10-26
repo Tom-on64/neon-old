@@ -87,14 +87,22 @@ export class Lexer {
                 if (this.current().match(/('|")/)) tokens.push(this.parseString()); // String
                 else tokens.push(this.parseNumber()); // Number
             } else if (this.current() === "=") {
-                tokens.push({ type: TokenType.EQUALS, _type: "token" });
-                this.consume();
+                if (this.peek() === "=") {
+                    tokens.push({ type: TokenType.DEQUALS, _type: "token" });
+                    this.consume(2);
+                } else {
+                    tokens.push({ type: TokenType.EQUALS, _type: "token" });
+                    this.consume();
+                }
             } else if (this.current() === ";") {
                 tokens.push({ type: TokenType.EOL, _type: "token" });
                 this.consume();
             } else if (this.current() === "+") {
                 if (this.peek() === "+") {
-                    tokens.push({ type: TokenType.DPLUS, _type: "token" })
+                    tokens.push({ type: TokenType.DPLUS, _type: "token" });
+                    this.consume(2);
+                } else if (this.peek() === "=") {
+                    tokens.push({ type: TokenType.PEQUALS, _type: "token" });
                     this.consume(2);
                 } else {
                     tokens.push({ type: TokenType.PLUS, _type: "token" });
@@ -102,7 +110,10 @@ export class Lexer {
                 }
             } else if (this.current() === "-") {
                 if (this.peek() === "-") {
-                    tokens.push({ type: TokenType.DMINUS, _type: "token" })
+                    tokens.push({ type: TokenType.DMINUS, _type: "token" });
+                    this.consume(2);
+                } else if (this.peek() === "=") {
+                    tokens.push({ type: TokenType.MEQUALS, _type: "token" });
                     this.consume(2);
                 } else {
                     tokens.push({ type: TokenType.MINUS, _type: "token" });
@@ -110,7 +121,7 @@ export class Lexer {
                 }
             } else if (this.current() === "*") {
                 if (this.peek() === "*") {
-                    tokens.push({ type: TokenType.DSTAR, _type: "token" })
+                    tokens.push({ type: TokenType.DSTAR, _type: "token" });
                     this.consume(2);
                 } else {
                     tokens.push({ type: TokenType.STAR, _type: "token" });
@@ -149,6 +160,9 @@ export enum TokenType {
     NULL = "null",
     // Special chars
     EQUALS = "equals",
+    DEQUALS = "dequals",
+    PEQUALS = "pequals",
+    MEQUALS = "mequals",
     PLUS = "plus",
     DPLUS = "dplus",
     MINUS = "minus",

@@ -2,14 +2,15 @@
   "name": "neon",
   "version": "0.0.3",
   "description": "The Neon programming language", 
-  "main": "index.js",
+  "main": "src/main.ts",
   "directories": {
     "doc": "docs", 
     "bin": "build", 
     "lin": "lib"
   },
   "scripts": {
-    "test": "deno run --allow-read --allow-write ./src/main.ts ./testing/main.ne -o ./testing/out.asm", 
+    "start": "deno run --allow-read --allow-write ./src/main.ts ./testing/main.ne -o ./testing/out.asm", 
+    "test": "deno run --allow-read --allow-write ./src/main.ts ./testing/main.ne -o ./testing/out.asm -d", 
     "build": "deno compile --output ./build/neon ./src/main.ts"
   },
   "repository": {

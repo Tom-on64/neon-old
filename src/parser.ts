@@ -155,23 +155,45 @@ export class Parser {
         if (op.type === TokenType.EQUALS) {
             expression = this.parseExpression();
             if (expression === NullExpr) error(9);
-        } else if (op.type === TokenType.DPLUS) expression = {
-            value: {
-                lhs: { value: identifier, _type: "expr" },
-                rhs: { value: { type: Literal.INT, value: 1, _type: "token" }, _type: "expr" },
-                _type: "add"
-            },
-            _type: "expr"
-        };
-        else if (op.type === TokenType.DMINUS) expression = {
-            value: {
-                lhs: { value: identifier, _type: "expr" },
-                rhs: { value: { type: Literal.INT, value: 1, _type: "token" }, _type: "expr" },
-                _type: "sub"
-            },
-            _type: "expr"
-        };
-        else return error(0, ["You fucked up"]);
+        } else if (op.type === TokenType.DPLUS) {
+            expression = {
+                value: {
+                    lhs: { value: identifier, _type: "expr" },
+                    rhs: { value: { type: Literal.INT, value: 1, _type: "token" }, _type: "expr" },
+                    _type: "add"
+                },
+                _type: "expr"
+            };
+        } else if (op.type === TokenType.DMINUS) {
+            expression = {
+                value: {
+                    lhs: { value: identifier, _type: "expr" },
+                    rhs: { value: { type: Literal.INT, value: 1, _type: "token" }, _type: "expr" },
+                    _type: "sub"
+                },
+                _type: "expr"
+            };
+        } else if (op.type === TokenType.PEQUALS) {
+            const added = this.parseExpression();
+            expression = {
+                value: {
+                    lhs: { value: identifier, _type: "expr" },
+                    rhs: added,
+                    _type: "add"
+                },
+                _type: "expr"
+            };
+        } else if (op.type === TokenType.MEQUALS) {
+            const subbed = this.parseExpression();
+            expression = {
+                value: {
+                    lhs: { value: identifier, _type: "expr" },
+                    rhs: subbed,
+                    _type: "sub"
+                },
+                _type: "expr"
+            };
+        } else return error(0, ["You fucked up"]);
 
         this.tryConsume(TokenType.EOL);
         return { identifier, expression, _type: "assign" };
@@ -185,8 +207,13 @@ export class Parser {
             return statement;
         } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER)
             return this.parseDeclaration();
-        else if (this.current().type === TokenType.IDENTIFIER && (this.peek().type === TokenType.EQUALS || this.peek().type === TokenType.DPLUS || this.peek().type === TokenType.DMINUS))
-            return this.parseAssignment();
+        else if (this.current().type === TokenType.IDENTIFIER && (
+            this.peek().type === TokenType.EQUALS || 
+            this.peek().type === TokenType.DPLUS || 
+            this.peek().type === TokenType.DMINUS || 
+            this.peek().type === TokenType.PEQUALS || 
+            this.peek().type === TokenType.MEQUALS
+            )) return this.parseAssignment();
         else if (this.current().type === TokenType.OPENCURLY) return this.parseScope();
         else if (this.current().type === TokenType.IF) return this.parseIf();
         else if (this.current().type === TokenType.WHILE) return this.parseWhile();
@@ -242,7 +269,6 @@ export interface INodeIf {
     scope: INodeScope;
     else?: INodeScope;
 }
-
 export interface INodeWhile {
     _type: "while";
     conditionExpr: INodeExpr;

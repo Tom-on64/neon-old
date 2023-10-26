@@ -30,6 +30,8 @@
           - [x] Multiplication / Division
           - [x] Parenthesis
           - [x] Operator precidence
+          - [x] Increment/decrement
+          - [x] += and -=
       - [ ] Pain
     - [x] Generator
       - [x] Code -> asm
