@@ -142,6 +142,9 @@ export class Lexer {
             } else if (this.current() === "}") {
                 tokens.push({ type: TokenType.CLOSECURLY, _type: "token" });
                 this.consume();
+            } else if (this.current() === ",") {
+                tokens.push({ type: TokenType.COMMA, _type: "token" });
+                this.consume();
             } else error(103, [this.consume()]);
         }
         tokens.push({ type: TokenType.EOF, _type: "token" })
@@ -174,6 +177,7 @@ export enum TokenType {
     CLOSEPAREN = "closeparen",
     OPENCURLY = "opencurly",
     CLOSECURLY = "closecurly",
+    COMMA = "comma", 
     // Other
     TYPE = "type",
     EOL = "EOL",

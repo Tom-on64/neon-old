@@ -3,19 +3,21 @@
 program = statement*; (* Root Node*)
 
 (* Nodes *)
-statement = return | declaration | assignment | scope | if | while;
-declaration = type identifier "=" expression;
-assignment = (identifier ("="|"+="|"-=") expression)|(identifier("++"|"--"));
+statement = return | declaration | assignment | scope | if | while| functionCall;
+declaration = type ident ("=" expr)|("(" (param ("," param)*)? ")" scope);
+param = type ident;
+assignment = (ident ("="|"+="|"-=") expr)|(ident("++"|"--"));
 return = "return" expr;
 scope = ("{" statement* "}");
 if = "if" "(" expr ")" (scope|statement) ("else" (scope|statement))?;
 while = "while" "(" expr ")" (scope|statement);
+functionCall = ident "(" (expr ("," expr)*)? ")";
 
-expression = term | binExpressions;
-term = intLit | identifier | "(" expr ")";
-binExpression = (expression "*" expression) | (expression "/" expression) | (expression "+" expression) | (expression "-" expression);
+expr = term | binExpressions | functionCall;
+term = intLit | ident | "(" expr ")";
+binExpression = (expr "*" expr) | (expr "/" expr) | (expr "+" expr) | (expr "-" expr);
 
 (* IToken *)
-identifier = [A-Za-z_][A-Za-z0-9_]*;
+ident = [A-Za-z_][A-Za-z0-9_]*;
 type = ?type?;
 intLit = ?LInt?;

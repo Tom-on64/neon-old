@@ -28,9 +28,10 @@ export class Parser {
     private parseTerm(): INodeTerm {
         if (this.current().type === Literal.INT)
             return this.consume();
-        else if (this.current().type === TokenType.IDENTIFIER)
-            return this.consume();
-        else if (this.current().type === TokenType.OPENPAREN) {
+        else if (this.current().type === TokenType.IDENTIFIER) {
+            if (this.peek().type === TokenType.OPENPAREN) return this.parseFunctionCall();
+            else return this.consume();
+        } else if (this.current().type === TokenType.OPENPAREN) {
             this.consume() // Consume the '('
             const paren: INodeParen = { innerExpr: this.parseExpression(), _type: "paren" };
             this.tryConsume(TokenType.CLOSEPAREN);
@@ -133,7 +134,7 @@ export class Parser {
         return { conditionExpr: expr, scope, _type: "while" };
     }
 
-    private parseDeclaration(): INodeDeclare {
+    private parseDeclaration(): INodeDeclare | INodeFunctionDeclare {
         const type = this.consume();
         const identifier = this.consume();
         if (this.current().type === TokenType.EOL) { // Declaration without a value
@@ -145,7 +146,41 @@ export class Parser {
             this.tryConsume(TokenType.EOL);
             if (statement.expression === NullExpr) error(206);
             return statement;
-        } else return error(203);
+        } else if (this.current().type === TokenType.OPENPAREN) {
+            this.tryConsume(TokenType.OPENPAREN);
+
+            const params: INodeParameter[] = [];
+            if (this.current().type === TokenType.TYPE) {
+                params.push({ type: this.consume(), identifier: this.consume(), _type: "parameter" });
+                while (this.current().type === TokenType.COMMA) {
+                    this.tryConsume(TokenType.COMMA);
+                    params.push({ type: this.consume(), identifier: this.consume(), _type: "parameter" });
+                }
+            }
+            this.tryConsume(TokenType.CLOSEPAREN);
+
+            const functionScope = this.parseScope();
+
+            return { identifier, returnType: type, functionScope, parameters: params, _type: "declareFun" };
+        } else return error(206);
+    }
+
+    private parseFunctionCall(): INodeFunctionCall {
+        const identifier = this.consume();
+        this.tryConsume(TokenType.OPENPAREN);
+
+        const args: INodeExpr[] = [];
+
+        if (this.current().type !== TokenType.CLOSEPAREN) {
+            args.push(this.parseExpression());
+            while (this.current().type === TokenType.COMMA) {
+                this.tryConsume(TokenType.COMMA);
+                args.push(this.parseExpression());
+            }
+        } 
+        this.tryConsume(TokenType.CLOSEPAREN);
+
+        return { identifier, args, _type: "funcCall" };
     }
 
     private parseAssignment(): INodeAssign {
@@ -208,12 +243,12 @@ export class Parser {
         } else if (this.current().type === TokenType.TYPE && this.peek().type === TokenType.IDENTIFIER)
             return this.parseDeclaration();
         else if (this.current().type === TokenType.IDENTIFIER && (
-            this.peek().type === TokenType.EQUALS || 
-            this.peek().type === TokenType.DPLUS || 
-            this.peek().type === TokenType.DMINUS || 
-            this.peek().type === TokenType.PEQUALS || 
+            this.peek().type === TokenType.EQUALS ||
+            this.peek().type === TokenType.DPLUS ||
+            this.peek().type === TokenType.DMINUS ||
+            this.peek().type === TokenType.PEQUALS ||
             this.peek().type === TokenType.MEQUALS
-            )) return this.parseAssignment();
+        )) return this.parseAssignment();
         else if (this.current().type === TokenType.OPENCURLY) return this.parseScope();
         else if (this.current().type === TokenType.IF) return this.parseIf();
         else if (this.current().type === TokenType.WHILE) return this.parseWhile();
@@ -233,6 +268,8 @@ export class Parser {
     }
 }
 
+/* --- Node interfaces --- */
+
 export interface INodeExpr {
     _type: "expr",
     value: INodeTerm | INodeBinExpr;
@@ -241,7 +278,7 @@ export interface INodeParen {
     _type: "paren";
     innerExpr: INodeExpr;
 }
-export type INodeTerm = IToken | INodeParen;
+export type INodeTerm = IToken | INodeParen | INodeFunctionCall;
 export interface INodeBinAdd {
     _type: "add";
     lhs: INodeExpr;
@@ -284,6 +321,23 @@ export interface INodeDeclare {
     expression: INodeExpr;
     type: IToken;
 }
+export interface INodeFunctionCall {
+    _type: "funcCall";
+    identifier: IToken;
+    args: INodeExpr[];
+}
+export interface INodeParameter {
+    _type: "parameter";
+    identifier: IToken;
+    type: IToken;
+}
+export interface INodeFunctionDeclare {
+    _type: "declareFun";
+    identifier: IToken;
+    parameters: INodeParameter[];
+    functionScope: INodeScope;
+    returnType: IToken;
+}
 export interface INodeAssign {
     _type: "assign";
     identifier: IToken;
@@ -293,7 +347,7 @@ export interface INodeScope {
     _type: "scope";
     statements: INodeStatement[];
 }
-export type INodeStatement = INodeReturn | INodeDeclare | INodeAssign | INodeScope | INodeIf | INodeWhile;
+export type INodeStatement = INodeReturn | INodeDeclare | INodeFunctionDeclare | INodeAssign | INodeScope | INodeIf | INodeWhile | INodeFunctionCall;
 export interface INodeProgram {
     _type: "program";
     statements: INodeStatement[];
