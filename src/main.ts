@@ -1,3 +1,4 @@
+import { error } from "./error.js";
 import { Generator } from "./generator.ts";
 import { Lexer } from "./lexer.ts";
 import { Parser } from "./parser.ts";
@@ -25,10 +26,7 @@ while (args.length > 0) {
             case "o": {
                 args.shift();
                 const path = args.shift();
-                if (!path) {
-                    console.error("Error: expected a file path.");
-                    Deno.exit(1);
-                }
+                if (!path) error(502);
                 options.output = path;
                 break;
             } case "d":
@@ -39,17 +37,11 @@ while (args.length > 0) {
                 console.log(helpPage);
                 break;
             default:
-                console.error("Error: Unknown option. Use 'neon --help' for a list of available options.");
-                Deno.exit(1);
+                error(503);
         }
-    } else {
-        options.input = args.shift();
-    }
+    } else options.input = args.shift();
 }
-if (!options.input) {
-    console.error("Error: No input file provided!");
-    Deno.exit(1);
-}
+if (!options.input) error(503);
 
 const file = Deno.readTextFileSync(options.input);
 const lexer = new Lexer();
@@ -68,4 +60,3 @@ interface IOptions {
     output: string;
     debug: boolean;
 }
-

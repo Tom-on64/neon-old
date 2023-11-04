@@ -1,4 +1,4 @@
-import { error } from "./error.ts";
+import { error } from "./error.js";
 
 export class Lexer {
     private index = 0;
@@ -6,7 +6,7 @@ export class Lexer {
 
     private consume(amount = 1): string {
         this.index += amount;
-        if (this.index > this.input.length) error(10);
+        if (this.index > this.input.length) error(104);
         return this.input[this.index - amount];
     }
 
@@ -15,7 +15,7 @@ export class Lexer {
     }
 
     private current(): string {
-        if (this.index >= this.input.length) error(10);
+        if (this.index >= this.input.length) error(104);
         return this.input[this.index];
     }
 
@@ -30,7 +30,7 @@ export class Lexer {
             return { type: Literal.STRING, value: string, _type: "token" };
         } else {
             const char = this.consume();
-            if (this.current() != quote) error(1);
+            if (this.current() != quote) error(101);
             this.consume(); // Consume the other quote
             return { type: Literal.CHAR, value: char, _type: "token" };
         }
@@ -50,7 +50,7 @@ export class Lexer {
 
         numString += this.consume(); // Consume period
         while (this.current().match(/[0-9]/)) numString += this.consume();
-        if (this.current() != "f") error(2);
+        if (this.current() != "f") error(102);
         this.consume() // Consume 'f'
 
         return { type: Literal.FLOAT, value: parseFloat(numString), _type: "token" };
@@ -61,7 +61,7 @@ export class Lexer {
         // Prepare file
         this.input = file
             .replaceAll(/(\/\*[\s\S]*?\*\/|\/\/[^\r\n]*$)/gm, "") // Remove all Comments
-            .replaceAll(/(\s\s+|\n)/g, "") // Remove whitespace
+            // .replaceAll(/(\s\s+|\n)/g, "") // Remove whitespace
             .split(""); // Split into single characters
 
         const tokens: IToken[] = [];
@@ -142,7 +142,7 @@ export class Lexer {
             } else if (this.current() === "}") {
                 tokens.push({ type: TokenType.CLOSECURLY, _type: "token" });
                 this.consume();
-            } else error(3, [this.consume()]);
+            } else error(103, [this.consume()]);
         }
         tokens.push({ type: TokenType.EOF, _type: "token" })
 

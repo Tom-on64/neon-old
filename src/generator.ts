@@ -1,4 +1,4 @@
-import { error } from "./error.ts";
+import { error } from "./error.js";
 import { Literal, TokenType } from "./lexer.ts";
 import { INodeAssign, INodeBinExpr, INodeExpr, INodeProgram, INodeScope, INodeStatement, INodeTerm } from "./parser.ts";
 import stdlib from "./stdlib.json" assert { type: "json" };
@@ -13,7 +13,7 @@ export class Generator {
     private genTerm(term: INodeTerm) {
         if (term._type === "token" && term.type === TokenType.IDENTIFIER) {
             const _var = this.getVar(term.value as string);
-            if (!_var) return error(0, [`Undeclared identifier '${term.value}'.`]);
+            if (!_var) return error(301, [term.value as string]);
             const offset = `QWORD [rsp + ${(this.stackSize - _var.stackLoc - 1) * 8}]`;
             this.push(offset);
         } else if (term._type === "token" && term.type === Literal.INT) {
@@ -48,9 +48,9 @@ export class Generator {
     private genAssign(assign: INodeAssign) {
         this.genExpression(assign.expression);
         this.pop("rax");
-        if (!assign.identifier.value || typeof (assign.identifier.value) !== "string") return error(0, ["you fucked up"]);
+        if (!assign.identifier.value || typeof (assign.identifier.value) !== "string") return error(300);
         const _var = this.getVar(assign.identifier.value);
-        if (!_var) return error(0, ["Assignment to undefined variable."])
+        if (!_var) return error(302)
         const offset = this.stackSize - _var.stackLoc;
         this.output += `    add rsp, ${offset * 8}\n`;
         this.push("rax");
@@ -65,8 +65,8 @@ export class Generator {
             this.pop("rdi");
             this.output += "    syscall\n";
         } else if (stmt._type == "declare") {
-            if (!stmt.identifier.value || typeof (stmt.identifier.value) !== "string") return error(0, ["you fucked up"]);
-            if (this.getVar(stmt.identifier.value)) return error(0, ["Variable already exists."])
+            if (!stmt.identifier.value || typeof (stmt.identifier.value) !== "string") return error(300);
+            if (this.getVar(stmt.identifier.value)) return error(303)
             this.vars.push({ identifier: stmt.identifier.value, stackLoc: this.stackSize });
             this.genExpression(stmt.expression);
         } else if (stmt._type === "scope") this.genScope(stmt);
@@ -144,7 +144,7 @@ export class Generator {
 
     private endScope() {
         const varCount = this.scopes.at(-1);
-        if (varCount === undefined) return error(0, ["You must begin a scope before ending it!"]);
+        if (varCount === undefined) return error(501);
         const popCount = this.vars.length - varCount;
         this.output += `    add rsp, ${popCount * 8}\n`;
         this.stackSize -= popCount;
