@@ -23,9 +23,10 @@
         - [x] Variables
         - [ ] Func Calls
         - [ ] Logic expressions
-          - [x] Define what is True and False
-          - [ ] And / Or / Not
-        - [x] Operations
+          - [x] Define what is True and False (1 - true; 0 - false)
+          - [ ] Comparisons (<, >, ==, >=, <=, !=)
+          - [ ] And / Or / Not / Xor?
+        - [x] Operations (on integers)
           - [x] Addition / Subtraction
           - [x] Multiplication / Division
           - [x] Parenthesis
@@ -39,24 +40,23 @@
   - [ ] Write docs 
 - [ ] Neon V0.2.0
   - [ ] More types
-    - [ ] String
-    - [ ] Signed/Unsigned Ints
-    - [ ] Floats
     - [ ] Bool
+    - [ ] Signed/Unsigned Ints
+    - [ ] Char
+    - [ ] String (char* ??)
+    - [ ] Floats
+    - [ ] Void
+    - [ ] Null
   - [ ] Exponentiatiation
 - [ ] Neon V0.3.0
   - [ ] Importing
-  - [ ] STD Lib (OS dependent things like syscalls)
+  - [ ] STD Lib 
+    - [ ] Syscalls
+    - [ ] Math (sqrt, sin, cos, etc.)
+    - [ ] IO
 - [ ] Neon V0.4.0
-  - [ ] OOP features
-    - [ ] class
-      - [ ] modifiers
-        - [ ] private
-        - [ ] public
-        - [ ] protected
-        - [ ] more
-    - [ ] struct
-    - [ ] enum
+  - [ ] struct
+  - [ ] enum
 - [ ] Neon V0.5.0
   - [ ] Define .nex
     - [ ] Assemble into .nex
@@ -65,7 +65,13 @@
   - [ ] User defined types
   - [ ] More std lib stuff
 - [ ] Neon V0.6.0
-  - [ ] something idk
+  - [ ] OOP features
+    - [ ] class
+      - [ ] modifiers
+        - [ ] private
+        - [ ] public
+        - [ ] protected
+        - [ ] more
 - [ ] Neon V0.7.0
   - [ ] Optimization
   - [ ] Testing
@@ -88,3 +94,4 @@
   - [ ] Release
   - [ ] Add to package managers
   - [ ] Release the Neon extension
+- And more...

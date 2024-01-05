@@ -38,10 +38,12 @@ const errors = {
     "206": "Expected expression", 
     // Generator
     "300": "Generation Error", 
-    "301": "Undeclared identifier '%1'", 
+    "301": "Undefined variable '%0'", 
     "302": "Assignment to undeclared variable", 
     "303": "Variable already exists", 
     "304": "Generation Error", 
+    "305": "Undefined function '%0'", 
+    "306": "Function '%0' expected %1 arguments, but got %2", 
     // Other
     "500": "Fatal Error", 
     "501": "You must begin a scope before closing it!", 

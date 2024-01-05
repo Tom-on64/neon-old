@@ -193,16 +193,9 @@ export enum Literal {
 
 const types = [
     "void",
-    "byte",
-    "sbyte",
-    "short",
-    "ushort",
     "int",
     "uint",
-    "long",
-    "ulong",
     "float",
-    "double",
     "char",
     "bool",
     "string",
