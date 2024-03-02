@@ -59,12 +59,12 @@ export class Generator {
     }
 
     private genStatement(stmt: INodeStatement) {
-        if (stmt._type == "return") {
+        if (stmt._type === "return") {
             this.genExpression(stmt.returnExpr);
             this.output += `    mov rax, ${stdlib.syscall.return}\n`;
             this.pop("rdi");
             this.output += "    syscall\n";
-        } else if (stmt._type == "declare") {
+        } else if (stmt._type === "declare") {
             if (!stmt.identifier.value || typeof (stmt.identifier.value) !== "string") return error(300);
             if (this.getVar(stmt.identifier.value)) return error(303)
             this.vars.push({ identifier: stmt.identifier.value, stackLoc: this.stackSize });

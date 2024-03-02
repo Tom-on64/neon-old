@@ -12,7 +12,7 @@ export class Parser {
     }
 
     private peek(amount = 1): IToken {
-        if (amount > this.tokens.length - this.index) error(203);
+        if (amount > this.tokens.length - this.index) error(203, [], this.current().lineNum);
         return this.tokens[this.index + amount]
     }
 
@@ -22,7 +22,7 @@ export class Parser {
 
     private tryConsume(type: TokenType) {
         if (this.current().type === type) this.consume();
-        else error(202, [type]);
+        else error(202, [type], this.current().lineNum);
     }
 
     private parseTerm(): INodeTerm {
@@ -54,7 +54,7 @@ export class Parser {
             const next_min_prec = prec + 1;
             const term_rhs = this.parseExpression(next_min_prec);
 
-            if (term_rhs.value === NULL) error(201);
+            if (term_rhs.value === NULL) error(201, [], this.current().lineNum);
 
             if (op.type === TokenType.PLUS) {
                 const add: INodeBinAdd = { lhs: { value: term_lhs.value, _type: "expr" }, rhs: term_rhs, _type: "add" };
@@ -68,7 +68,7 @@ export class Parser {
             } else if (op.type === TokenType.FSLASH) {
                 const mult: INodeBinDiv = { lhs: { value: term_lhs.value, _type: "expr" }, rhs: term_rhs, _type: "div" };
                 expr.value = mult;
-            } else error(205);
+            } else error(205, [], this.current().lineNum);
 
             term_lhs.value = expr.value;
         }
@@ -95,7 +95,7 @@ export class Parser {
 
         const expr = this.parseExpression();
         this.tryConsume(TokenType.CLOSEPAREN);
-        if (expr.value === NULL) error(206);
+        if (expr.value === NULL) error(206, [], this.current().lineNum);
 
         let scope: INodeScope;
         if (this.current().type !== TokenType.OPENCURLY) {
@@ -123,7 +123,7 @@ export class Parser {
 
         const expr = this.parseExpression();
         this.tryConsume(TokenType.CLOSEPAREN);
-        if (expr.value === NULL) error(206);
+        if (expr.value === NULL) error(206, [], this.current().lineNum);
 
         let scope: INodeScope;
         if (this.current().type !== TokenType.OPENCURLY) {
@@ -144,7 +144,7 @@ export class Parser {
             this.consume(); // Consume the '='
             const statement: INodeDeclare = { type, identifier, expression: this.parseExpression(), _type: "declare" };
             this.tryConsume(TokenType.EOL);
-            if (statement.expression === NullExpr) error(206);
+            if (statement.expression === NullExpr) error(206, [], this.current().lineNum);
             return statement;
         } else if (this.current().type === TokenType.OPENPAREN) {
             this.tryConsume(TokenType.OPENPAREN);
@@ -162,7 +162,7 @@ export class Parser {
             const functionScope = this.parseScope();
 
             return { identifier, returnType: type, functionScope, parameters: params, _type: "declareFun" };
-        } else return error(206);
+        } else return error(206, [], this.current().lineNum);
     }
 
     private parseFunctionCall(): INodeFunctionCall {
@@ -189,7 +189,7 @@ export class Parser {
         let expression: INodeExpr;
         if (op.type === TokenType.EQUALS) {
             expression = this.parseExpression();
-            if (expression === NullExpr) error(206);
+            if (expression === NullExpr) error(206, [], this.current().lineNum);
         } else if (op.type === TokenType.DPLUS) {
             expression = {
                 value: {
@@ -228,7 +228,7 @@ export class Parser {
                 },
                 _type: "expr"
             };
-        } else return error(200);
+        } else return error(200, [], this.current().lineNum);
 
         this.tryConsume(TokenType.EOL);
         return { identifier, expression, _type: "assign" };
@@ -252,7 +252,7 @@ export class Parser {
         else if (this.current().type === TokenType.OPENCURLY) return this.parseScope();
         else if (this.current().type === TokenType.IF) return this.parseIf();
         else if (this.current().type === TokenType.WHILE) return this.parseWhile();
-        else return error(204, [this.current().type]);
+        else return error(204, [this.current().type], this.current().lineNum);
     }
 
     parse(tokens: IToken[]): INodeProgram {

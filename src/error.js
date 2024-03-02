@@ -5,17 +5,18 @@
 /**
  * Throws an error
  * @param {number} code Error code
- * @param {string[]} args Arguments for the error
+ * @param {string[]} args Arguments for the error message
+ * @param {number|undefined} lineNum Line number of error
  * @returns {never}
  */
-export const error = (code = 0, args = []) => {
+export const error = (code = 0, args = [], lineNum = undefined) => {
     // if (Object.keys(errors).includes(errCode))
     const errCode = code.toString().padStart(3, "0");
     let err = errors[errCode];
 
     args.forEach((arg, i) => {err = err.replaceAll(`%${i}`, arg)});
 
-    console.error(`\u001b[31mError: ${err ? err : "Unknown Error"}    \u001b[1m\u001b[90mNE${errCode}\u001b[0m`);
+    console.error(`\u001b[31mError: ${err ? err : "Unknown Error"}    \u001b[90m${lineNum ? ` Line: ${lineNum} ` : ""}\u001b[1mNE${errCode}\u001b[0m`);
     return Deno.exit(1);
 }
 
@@ -29,11 +30,11 @@ const errors = {
     "103": "Invalid character '%0'", 
     "104": "Unexpected End of file", 
     // Parser
-    "200": "Parsing Error", 
-    "201": "Unable to parse expression", 
-    "202": "Expected %0", 
+    "200": "Parser Error", 
+    "201": "Failed while parsing expression", 
+    "202": "Expected '%0'", 
     "203": "Peek out of range", 
-    "204": "Expected statement, but got %0", 
+    "204": "Expected statement, but got '%0'", 
     "205": "Unknown operator", 
     "206": "Expected expression", 
     // Generator
